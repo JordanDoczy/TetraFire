@@ -23,8 +23,6 @@
 		E6C2788D1F5EDDE60057106E /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6C2788C1F5EDDE60057106E /* GameViewController.swift */; };
 		E6C278901F5EDDE60057106E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E6C2788E1F5EDDE60057106E /* Main.storyboard */; };
 		E6C278951F5EDDE60057106E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E6C278931F5EDDE60057106E /* LaunchScreen.storyboard */; };
-		E6C278A01F5EDDE70057106E /* TetraFireTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6C2789F1F5EDDE70057106E /* TetraFireTests.swift */; };
-		E6C278AB1F5EDDE70057106E /* TetraFireUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6C278AA1F5EDDE70057106E /* TetraFireUITests.swift */; };
 		E6C278B91F5EDE110057106E /* Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6C278B81F5EDE110057106E /* Enums.swift */; };
 		E6C278BB1F5EDE590057106E /* GridModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6C278BA1F5EDE590057106E /* GridModel.swift */; };
 		E6C278BD1F5EDEE70057106E /* TypeAliases.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6C278BC1F5EDEE70057106E /* TypeAliases.swift */; };
@@ -87,11 +85,7 @@
 		E6C278941F5EDDE60057106E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E6C278961F5EDDE60057106E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E6C2789B1F5EDDE70057106E /* TetraFireTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TetraFireTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		E6C2789F1F5EDDE70057106E /* TetraFireTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TetraFireTests.swift; sourceTree = "<group>"; };
-		E6C278A11F5EDDE70057106E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E6C278A61F5EDDE70057106E /* TetraFireUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TetraFireUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		E6C278AA1F5EDDE70057106E /* TetraFireUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TetraFireUITests.swift; sourceTree = "<group>"; };
-		E6C278AC1F5EDDE70057106E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E6C278B81F5EDE110057106E /* Enums.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Enums.swift; sourceTree = "<group>"; };
 		E6C278BA1F5EDE590057106E /* GridModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GridModel.swift; sourceTree = "<group>"; };
 		E6C278BC1F5EDEE70057106E /* TypeAliases.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TypeAliases.swift; sourceTree = "<group>"; };
@@ -157,8 +151,6 @@
 			isa = PBXGroup;
 			children = (
 				E6C278891F5EDDE60057106E /* TetraFire */,
-				E6C2789E1F5EDDE70057106E /* TetraFireTests */,
-				E6C278A91F5EDDE70057106E /* TetraFireUITests */,
 				E6C278881F5EDDE60057106E /* Products */,
 			);
 			sourceTree = "<group>";
@@ -191,24 +183,6 @@
 				E6C278CF1F5F3B530057106E /* Views */,
 			);
 			path = TetraFire;
-			sourceTree = "<group>";
-		};
-		E6C2789E1F5EDDE70057106E /* TetraFireTests */ = {
-			isa = PBXGroup;
-			children = (
-				E6C2789F1F5EDDE70057106E /* TetraFireTests.swift */,
-				E6C278A11F5EDDE70057106E /* Info.plist */,
-			);
-			path = TetraFireTests;
-			sourceTree = "<group>";
-		};
-		E6C278A91F5EDDE70057106E /* TetraFireUITests */ = {
-			isa = PBXGroup;
-			children = (
-				E6C278AA1F5EDDE70057106E /* TetraFireUITests.swift */,
-				E6C278AC1F5EDDE70057106E /* Info.plist */,
-			);
-			path = TetraFireUITests;
 			sourceTree = "<group>";
 		};
 		E6C278BE1F5EDF3A0057106E /* Assets */ = {
@@ -479,7 +453,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E6C278A01F5EDDE70057106E /* TetraFireTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -487,7 +460,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E6C278AB1F5EDDE70057106E /* TetraFireUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
