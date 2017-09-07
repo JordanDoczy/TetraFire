@@ -19,6 +19,7 @@
 		E619FDF51F6175FA00481A51 /* GameOverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E619FDF41F6175FA00481A51 /* GameOverView.swift */; };
 		E619FDF71F61760800481A51 /* LevelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E619FDF61F61760800481A51 /* LevelView.swift */; };
 		E619FDF91F61761300481A51 /* ModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E619FDF81F61761300481A51 /* ModalView.swift */; };
+		E64D7F291F61D12D00ACBB0E /* TutorialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E64D7F281F61D12D00ACBB0E /* TutorialViewController.swift */; };
 		E6C2788B1F5EDDE60057106E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6C2788A1F5EDDE60057106E /* AppDelegate.swift */; };
 		E6C2788D1F5EDDE60057106E /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6C2788C1F5EDDE60057106E /* GameViewController.swift */; };
 		E6C278901F5EDDE60057106E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E6C2788E1F5EDDE60057106E /* Main.storyboard */; };
@@ -78,6 +79,7 @@
 		E619FDF41F6175FA00481A51 /* GameOverView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameOverView.swift; sourceTree = "<group>"; };
 		E619FDF61F61760800481A51 /* LevelView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LevelView.swift; sourceTree = "<group>"; };
 		E619FDF81F61761300481A51 /* ModalView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModalView.swift; sourceTree = "<group>"; };
+		E64D7F281F61D12D00ACBB0E /* TutorialViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TutorialViewController.swift; sourceTree = "<group>"; };
 		E6C278871F5EDDE60057106E /* TetraFire.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TetraFire.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E6C2788A1F5EDDE60057106E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E6C2788C1F5EDDE60057106E /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
@@ -241,6 +243,7 @@
 			isa = PBXGroup;
 			children = (
 				E6C2788C1F5EDDE60057106E /* GameViewController.swift */,
+				E64D7F281F61D12D00ACBB0E /* TutorialViewController.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -443,6 +446,7 @@
 				E619FDF91F61761300481A51 /* ModalView.swift in Sources */,
 				E619FDF31F616D1F00481A51 /* MenuView.swift in Sources */,
 				E6C278CC1F5F3B4A0057106E /* GridView.swift in Sources */,
+				E64D7F291F61D12D00ACBB0E /* TutorialViewController.swift in Sources */,
 				E6C278C31F5EDFF60057106E /* Strings.swift in Sources */,
 				E6C278E41F5F46B50057106E /* UIGridView.swift in Sources */,
 				E6C278D21F5F3C600057106E /* Constants.swift in Sources */,

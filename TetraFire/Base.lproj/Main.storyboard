@@ -22,9 +22,34 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
+                    <connections>
+                        <segue destination="Ubh-rI-UBb" kind="show" identifier="showTutorialSegue" animates="NO" id="IuM-d8-YO4"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+        </scene>
+        <!--Tutorial View Controller-->
+        <scene sceneID="tyB-dG-Sv3">
+            <objects>
+                <viewController id="Ubh-rI-UBb" customClass="TutorialViewController" customModule="TetraFire" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="E5X-vf-Qil"/>
+                        <viewControllerLayoutGuide type="bottom" id="gP0-8e-CtI"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="w0G-Oh-Y31">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <connections>
+                        <segue destination="QHg-1f-cW0" kind="unwind" identifier="unwindToGameSegue" animates="NO" unwindAction="unwind:" id="C20-q7-LQR"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="brn-iD-H0v" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="QHg-1f-cW0" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="871" y="87"/>
         </scene>
     </scenes>
 </document>

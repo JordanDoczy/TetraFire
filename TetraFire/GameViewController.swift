@@ -22,44 +22,44 @@ class GameViewController: UIViewController, HUDViewDataSource {
     let constants = Constants.GameViewController.self
     
     // MARK: - Models
-    fileprivate var activePiece = UserData.shared.activePiece
-    fileprivate var gameMode = UserData.shared.gameMode
-    fileprivate var gridModel = UserData.shared.gridModel
-    fileprivate var heldPiece = UserData.shared.heldPiece
-    fileprivate(set) var level = UserData.shared.level
-    fileprivate var previousLevel = 0
-    fileprivate(set) var score = UserData.shared.score
-    fileprivate var sidePanelModel = UserData.shared.sidePanelModel
-    fileprivate var vibrate = UserData.shared.vibrate
+    internal var activePiece = UserData.shared.activePiece
+    internal var gameMode = UserData.shared.gameMode
+    internal var gridModel = UserData.shared.gridModel
+    internal var heldPiece = UserData.shared.heldPiece
+    internal var level = UserData.shared.level
+    internal var previousLevel = 0
+    internal var score = UserData.shared.score
+    internal var sidePanelModel = UserData.shared.sidePanelModel
+    internal var vibrate = UserData.shared.vibrate
     
     // MARK: - Member Vars
-    fileprivate var didSwap: Bool = false
-    fileprivate var gameState = GameState.gameOver
-    fileprivate var longPressState: UIGestureRecognizerState = .ended
-    fileprivate var panLocation: CGPoint?
-    fileprivate var scoreOffset: Int = 0
-    fileprivate var timerDropInterval = 0.015
-    fileprivate var timerHoldInterval = 0.1
-    fileprivate var timerState = TimerState.update
+    internal var didSwap: Bool = false
+    internal var gameState = GameState.gameOver
+    internal var longPressState: UIGestureRecognizerState = .ended
+    internal var panLocation: CGPoint?
+    internal var scoreOffset: Int = 0
+    internal var timerDropInterval = 0.015
+    internal var timerHoldInterval = 0.1
+    internal var timerState = TimerState.update
 
     // MARK: - Computed Vars
-    var boxWidth: CGFloat {
+    internal var boxWidth: CGFloat {
         return gridView.boxWidth
     }
 
-    fileprivate var columnWidth: CGFloat {
+    internal var columnWidth: CGFloat {
         return floor(view.frame.width / 17)
     }
 
-    fileprivate var offset: CGFloat {
+    internal var offset: CGFloat {
         return (view.frame.height <= 480) ? 10 : 30
     }
     
-    fileprivate var particleScene: ParticleScene? {
+    internal var particleScene: ParticleScene? {
         return (UIApplication.shared.delegate as? AppDelegate)?.particleScene
     }
     
-    fileprivate var timerUpdateInterval: TimeInterval {
+    internal var timerUpdateInterval: TimeInterval {
         switch gameMode {
         case .classic:
             return Constants.slowestSpeed - ((Constants.slowestSpeed - Constants.fastestSpeed) / Double(Constants.maxLevelClassicMode - 1) * Double(level - 1))
@@ -69,13 +69,13 @@ class GameViewController: UIViewController, HUDViewDataSource {
     }
     
     // MARK: - Views
-    fileprivate lazy var backgroundView: BackgroundView = { [unowned self] in
+    internal lazy var backgroundView: BackgroundView = { [unowned self] in
         let backgroundView = BackgroundView(frame: self.view.frame)
         backgroundView.isUserInteractionEnabled = false
         return backgroundView
         }()
     
-    fileprivate lazy var flashView: UIView = { [unowned self] in
+    internal lazy var flashView: UIView = { [unowned self] in
         let view = UIView(frame: self.view.frame)
         view.backgroundColor = .white
         view.alpha = 0
@@ -83,7 +83,7 @@ class GameViewController: UIViewController, HUDViewDataSource {
         return view
         }()
     
-    fileprivate lazy var gameOverView: GameOverView = { [unowned self] in
+    internal lazy var gameOverView: GameOverView = { [unowned self] in
         let gameOverView = GameOverView(frame: CGRect(x: 0, y: 0,
                                                       width: self.view.frame.width * 0.7,
                                                       height: self.view.frame.width * 0.5))
@@ -94,7 +94,7 @@ class GameViewController: UIViewController, HUDViewDataSource {
         
         }()
     
-    fileprivate lazy var gridView: TetraFireGridView = { [unowned self] in
+    internal lazy var gridView: TetraFireGridView = { [unowned self] in
         let width: CGFloat = self.columnWidth * CGFloat(Constants.columns)
         let height: CGFloat = width * CGFloat(Constants.rows) / CGFloat(Constants.columns)
         let x = self.offset
@@ -106,10 +106,11 @@ class GameViewController: UIViewController, HUDViewDataSource {
                                         frame: frame)
         gridView.dataSource = self
         gridView.delegate = self
+        gridView.isHidden = true
         return gridView
         }()
     
-    fileprivate lazy var holdView: HoldView = { [unowned self] in
+    internal lazy var holdView: HoldView = { [unowned self] in
         let width = self.columnWidth * 4
         let height = self.view.frame.height <= 480 ? self.columnWidth * 4 : self.columnWidth * 5
         var y = self.gridView.frame.origin.y - height - self.offset
@@ -117,25 +118,27 @@ class GameViewController: UIViewController, HUDViewDataSource {
         holdView.center.x = self.view.center.x
         holdView.blockSize = CGSize(width: self.columnWidth, height: self.columnWidth)
         holdView.dataSource = self
+        holdView.isHidden = true
         return holdView
         }()
     
-    fileprivate lazy var hudView: HUDView = { [unowned self] in
+    internal lazy var hudView: HUDView = { [unowned self] in
         let hudView = HUDView(frame: self.view.frame)
         hudView.dataSource = self
         hudView.delegate = self
         hudView.isUserInteractionEnabled = true
+        hudView.isHidden = true
         return hudView
         }()
     
-    fileprivate lazy var levelView: LevelView = { [unowned self] in
+    internal lazy var levelView: LevelView = { [unowned self] in
         let levelView = LevelView(frame: CGRect(origin: .zero,
                                                 size: CGSize(width: self.view.frame.width/2,
                                                              height: self.view.frame.width/6)))
         return levelView
         }()
     
-    fileprivate lazy var menuView: MenuView = { [unowned self] in
+    internal lazy var menuView: MenuView = { [unowned self] in
         let menuView = MenuView(frame: self.view.frame,
                                 classicLevelCount: Constants.maxLevelClassicMode,
                                 fireLevelCount: Constants.maxLevelFireMode)
@@ -144,14 +147,14 @@ class GameViewController: UIViewController, HUDViewDataSource {
         return menuView
         }()
     
-    fileprivate lazy var overlayView: UIView = { [unowned self] in
+    internal lazy var overlayView: UIView = { [unowned self] in
         let ovelayView = UIView(frame: self.view.frame)
         ovelayView.backgroundColor = .darkDisabled
         ovelayView.isUserInteractionEnabled = false
         return ovelayView
         }()
     
-    fileprivate lazy var particleView: SKView = { [unowned self] in
+    internal lazy var particleView: SKView = { [unowned self] in
         let particleView = SKView()
         particleView.frame.origin = .zero
         particleView.isUserInteractionEnabled = false
@@ -159,10 +162,11 @@ class GameViewController: UIViewController, HUDViewDataSource {
         particleView.allowsTransparency = true
         particleView.layer.zPosition = 1000
         particleView.frame.size = self.view.frame.size
+        particleView.presentScene(self.particleScene)
         return particleView
         }()
     
-    fileprivate lazy var sidePanelView:SidePanelView = { [unowned self] in
+    internal lazy var sidePanelView:SidePanelView = { [unowned self] in
         let panelWidth: CGFloat = self.columnWidth * 3
         let panelHeight: CGFloat = self.columnWidth * CGFloat(Constants.rows)
         var xOffset: CGFloat = (self.view.frame.width - self.gridView.frame.origin.x - self.gridView.frame.width - panelWidth) / 2
@@ -172,6 +176,7 @@ class GameViewController: UIViewController, HUDViewDataSource {
                                                         height: panelHeight))
         sidePanelView.blockSize = CGSize(width: self.columnWidth, height: self.columnWidth)
         sidePanelView.dataSource = self.sidePanelModel
+        sidePanelView.isHidden = true
         return sidePanelView
         }()
 
@@ -179,6 +184,8 @@ class GameViewController: UIViewController, HUDViewDataSource {
     override var prefersStatusBarHidden: Bool {
         return true
     }
+    
+    @IBAction func unwind(_ sender: UIStoryboardSegue){ }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -189,17 +196,14 @@ class GameViewController: UIViewController, HUDViewDataSource {
         hudView.update()
         gridView.update()
         sidePanelView.update()
+        
+        AudioManager.shared.playBackgroundMusic()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         backgroundView.startAnimating()
-        
-        if UserData.shared.skipTutorial {
-            menuView.show()
-        } else {
-            tutorial()
-        }
+        appeared()
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -208,7 +212,7 @@ class GameViewController: UIViewController, HUDViewDataSource {
     }
     
     // MARK: - Set Up Methods
-    fileprivate func addGestures() {
+    internal func addGestures() {
         view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onTap)))
         view.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(onPan(sender:))))
         
@@ -217,7 +221,7 @@ class GameViewController: UIViewController, HUDViewDataSource {
         view.addGestureRecognizer(longPressGestureRecognizer)
     }
     
-    fileprivate func addSubviews() {
+    internal func addSubviews() {
         view.addSubview(backgroundView)
         view.addSubview(flashView)
         view.addSubview(overlayView)
@@ -230,9 +234,16 @@ class GameViewController: UIViewController, HUDViewDataSource {
         view.addSubview(particleView)
         
         gridView.addSubview(levelView)
-        
-        particleView.presentScene(particleScene)
     }
+    
+    internal func appeared() {
+        //if UserData.shared.skipTutorial {
+            menuView.show()
+        //} else {
+        //    tutorial()
+        //}
+    }
+    
     
     // MARK: - Animation Methods
     fileprivate func flash() {
@@ -272,7 +283,7 @@ class GameViewController: UIViewController, HUDViewDataSource {
     }
     
     // MARK: - Game Methods
-    fileprivate func didIncreaseLevel() -> Bool {
+    internal func didIncreaseLevel() -> Bool {
         guard gameState != .gameOver else {
             return false
         }
@@ -328,7 +339,7 @@ class GameViewController: UIViewController, HUDViewDataSource {
         holdView.hide()
     }
     
-    fileprivate func holdPiece() {
+    internal func holdPiece() {
         guard didSwap == false else { return }
         
         activePiece?.gridPosition = (row: 0, column: 0)
@@ -339,7 +350,7 @@ class GameViewController: UIViewController, HUDViewDataSource {
         didSwap = true
     }
     
-    func incrementRow() {
+    internal func incrementRow() {
         guard gameState == .inPlay else{
             return
         }
@@ -378,7 +389,7 @@ class GameViewController: UIViewController, HUDViewDataSource {
         }
     }
     
-    func pauseGame() {
+    internal func pauseGame() {
         gameState = .paused
         
         stopTimer()
@@ -426,7 +437,7 @@ class GameViewController: UIViewController, HUDViewDataSource {
         }
     }
     
-    func setPiece() {
+    internal func setPiece() {
         guard let activePiece = activePiece else {
             return
         }
@@ -500,7 +511,7 @@ class GameViewController: UIViewController, HUDViewDataSource {
         }
     }
     
-    fileprivate func startTimer(with timerState: TimerState) {
+    internal func startTimer(with timerState: TimerState) {
         stopTimer()
         
         switch(timerState) {
@@ -526,12 +537,12 @@ class GameViewController: UIViewController, HUDViewDataSource {
         self.timerState = timerState
     }
     
-    fileprivate func stopTimer() {
+    internal func stopTimer() {
         particleScene?.removeAction(forKey: constants.timerActionKey)
     }
     
     // MARK: - Gesture Recognizers
-    func onLongPress(sender: UILongPressGestureRecognizer) {
+    internal func onLongPress(sender: UILongPressGestureRecognizer) {
         guard gameState == .inPlay else {
             return
         }
@@ -548,7 +559,7 @@ class GameViewController: UIViewController, HUDViewDataSource {
         }
     }
     
-    func onPan(sender: UIPanGestureRecognizer) {
+    internal func onPan(sender: UIPanGestureRecognizer) {
         guard gameState == .inPlay else{
             return
         }
@@ -578,7 +589,7 @@ class GameViewController: UIViewController, HUDViewDataSource {
         }
     }
     
-    func onTap(sender: UITapGestureRecognizer) {
+    internal func onTap(sender: UITapGestureRecognizer) {
         guard gameState == .inPlay else {
             return
         }
@@ -618,25 +629,25 @@ class GameViewController: UIViewController, HUDViewDataSource {
 }
 
 extension GameViewController: GameOverViewDelegate {
-    func playAgain() {
+    internal func playAgain() {
         gameOverView.hide()
         newGame(gameMode: gameMode, level: previousLevel)
     }
     
-    func quit() {
+    internal func quit() {
         gameOverView.hide()
         menuView.show()
     }
 }
 
 extension GameViewController: GridViewDataSource {
-    func value(at position: GridPosition) -> BlockType? {
+    internal func value(at position: GridPosition) -> BlockType? {
         return gridModel.value(at: position)
     }
 }
 
 extension GameViewController: GridViewDelegate {
-    func gridViewDidUpdate(gridView: GridView) {
+    internal func gridViewDidUpdate(gridView: GridView) {
         resumeTimer()
         
         if gameState == .setPiece {
@@ -646,24 +657,23 @@ extension GameViewController: GridViewDelegate {
 }
 
 extension GameViewController: HoldViewDataSource {
-    func getPieceModel() -> PieceModel? {
+    internal func getPieceModel() -> PieceModel? {
         return heldPiece
     }
 }
 
 extension GameViewController: HUDViewDelegate {
-    func showMenu() {
+    internal func showMenu() {
         menuView.show()
     }
 }
 
 extension GameViewController: MenuViewDelegate {
     
-    func menuDidHide(menuView: MenuView) {
+    internal func menuDidHide(menuView: MenuView) {
         switch gameState {
         case .tutorial:
-            break
-            // performSegue(withIdentifier: constants.showTutorialSegue, sender: nil)
+            performSegue(withIdentifier: constants.showTutorialSegue, sender: nil)
         default:
             gridView.update()
             gridView.show()
@@ -673,15 +683,15 @@ extension GameViewController: MenuViewDelegate {
         }
     }
     
-    func menuDidShow(menuView: MenuView) {
+    internal func menuDidShow(menuView: MenuView) {
         print("menuDidShow")
     }
     
-    func menuWillHide(menuView: MenuView) {
+    internal func menuWillHide(menuView: MenuView) {
         print("menuWillHide")
     }
     
-    func menuWillShow(menuView: MenuView) {
+    internal func menuWillShow(menuView: MenuView) {
         particleScene?.removeAllChildren()
         
         gridView.isHidden = true
@@ -690,7 +700,7 @@ extension GameViewController: MenuViewDelegate {
         holdView.isHidden = true
     }
     
-    func newGame(gameMode: GameMode, level: Int = 1) {
+    internal func newGame(gameMode: GameMode, level: Int = 1) {
         reset()
         
         self.gameMode = gameMode
@@ -714,7 +724,7 @@ extension GameViewController: MenuViewDelegate {
         startGame()
     }
     
-    func resumeGame() {
+    internal func resumeGame() {
          gameState = .inPlay
         
         menuView.hide()
@@ -725,18 +735,18 @@ extension GameViewController: MenuViewDelegate {
         startTimer(with: .update)
     }
     
-    func tutorial() {
+    internal func tutorial() {
         gameState = .tutorial
         menuView.hide()
     }
 }
 
 extension GameViewController: MenuViewDataSource {
-    var canResumeGame: Bool {
+    internal var canResumeGame: Bool {
         return gridModel.isEmpty() == false
     }
     
-    func maxLevelAchieved(for gameMode: GameMode) -> Int {
+    internal func maxLevelAchieved(for gameMode: GameMode) -> Int {
         switch gameMode {
         case .classic: return UserData.shared.highestLevelClassicMode
         case .fire: return UserData.shared.highestLevelFireMode

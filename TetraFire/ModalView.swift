@@ -41,8 +41,7 @@ class ModalView: UIView{
     
     override required init(frame: CGRect) {
         super.init(frame: frame)
-        
-        isHidden = true
+
         addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(close)))
     }
     
