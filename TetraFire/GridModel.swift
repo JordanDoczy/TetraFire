@@ -231,10 +231,10 @@ class GridModel: NSObject, NSCoding, GridViewDataSource {
         let indiciesOfPositions = gridPositions.map { getIndex(at: $0) }
         
         let max = indiciesOfPositions.max() ?? blocks.count
-        let min = indiciesOfPositions.min() ?? 0
+        let min = indiciesOfPositions.min() ?? -1
 
         // check indicies are in bounds
-        guard indiciesOfPositions.count > 0 && (min > 0 && max < blocks.count) else {
+        guard indiciesOfPositions.count > 0 && (min >= 0 && max < blocks.count) else {
             return false
         }
                 

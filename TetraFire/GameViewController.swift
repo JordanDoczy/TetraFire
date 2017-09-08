@@ -592,10 +592,9 @@ class GameViewController: UIViewController, HUDViewDataSource {
             abs(x - sender.location(in: view).x) >= boxWidth / 2 {
             
             var gridPosition = activePiece.gridPosition
+            
             if x - sender.location(in: view).x >= 0 {
-                if gridPosition.column > 0 {
-                    gridPosition.column -= 1
-                }
+                gridPosition.column -= 1
             } else {
                 gridPosition.column += 1
             }
