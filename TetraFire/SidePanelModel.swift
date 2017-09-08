@@ -66,9 +66,3 @@ class SidePanelModel: NSObject, NSCoding {
         return piece
     }
 }
-
-extension SidePanelModel: SidePanelDataSource {
-    internal func getPieceQueue() -> [PieceModel] {
-        return pieces
-    }
-}

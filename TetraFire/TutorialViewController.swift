@@ -93,6 +93,11 @@ class TutorialViewController: GameViewController {
         }()
     
     // MARK: - Methods
+    override func viewWillDisappear(_ animated: Bool) {
+        particleScene?.removeAllChildren()
+        super.viewWillDisappear(animated)
+    }
+    
     override func addSubviews() {
         view.addSubview(backgroundView)
         view.addSubview(flashView)
@@ -118,6 +123,7 @@ class TutorialViewController: GameViewController {
         sidePanelModel = SidePanelModel()
         
         tutorial = 0
+        backgroundView.show()
     }
     
     internal func back() {
@@ -205,68 +211,68 @@ class TutorialViewController: GameViewController {
             gridModel = GridModelFactory.emptyModel
             let activePiece = SquarePiece()
             activePiece.gridPosition = (row: 2, column: 0)
-            gridModel.setValues(.activeBlock(color: activePiece.color), at: activePiece.gridPositions)
+            gridModel.setValues(.active(color: activePiece.color), at: activePiece.gridPositions)
             self.activePiece = activePiece
         case 2:
             gridModel = GridModelFactory.emptyModel
             let activePiece = TPiece()
             activePiece.gridPosition = (row: 1, column: 3)
-            gridModel.setValues(.activeBlock(color: activePiece.color), at: activePiece.gridPositions)
+            gridModel.setValues(.active(color: activePiece.color), at: activePiece.gridPositions)
             self.activePiece = activePiece
         case 3:
             gridModel = GridModelFactory.emptyModel
-            gridModel.setValue(.block(color: .purple), at: (row: 19, column: 0))
+            gridModel.setValue(.inactive(color: .purple), at: (row: 19, column: 0))
             
-            gridModel.setValue(.block(color: .purple), at: (row: 19, column: 1))
-            gridModel.setValue(.block(color: .purple), at: (row: 19, column: 2))
-            gridModel.setValue(.block(color: .purple), at: (row: 19, column: 3))
-            gridModel.setValue(.block(color: .purple), at: (row: 19, column: 5))
-            gridModel.setValue(.block(color: .purple), at: (row: 19, column: 6))
-            gridModel.setValue(.block(color: .purple), at: (row: 19, column: 7))
-            gridModel.setValue(.block(color: .purple), at: (row: 19, column: 8))
-            gridModel.setValue(.block(color: .purple), at: (row: 19, column: 9))
+            gridModel.setValue(.inactive(color: .purple), at: (row: 19, column: 1))
+            gridModel.setValue(.inactive(color: .purple), at: (row: 19, column: 2))
+            gridModel.setValue(.inactive(color: .purple), at: (row: 19, column: 3))
+            gridModel.setValue(.inactive(color: .purple), at: (row: 19, column: 5))
+            gridModel.setValue(.inactive(color: .purple), at: (row: 19, column: 6))
+            gridModel.setValue(.inactive(color: .purple), at: (row: 19, column: 7))
+            gridModel.setValue(.inactive(color: .purple), at: (row: 19, column: 8))
+            gridModel.setValue(.inactive(color: .purple), at: (row: 19, column: 9))
 
-            gridModel.setValue(.block(color: .blue), at: (row: 18, column: 0))
-            gridModel.setValue(.block(color: .blue), at: (row: 18, column: 1))
-            gridModel.setValue(.block(color: .blue), at: (row: 18, column: 2))
-            gridModel.setValue(.block(color: .blue), at: (row: 18, column: 3))
-            gridModel.setValue(.block(color: .blue), at: (row: 18, column: 5))
-            gridModel.setValue(.block(color: .blue), at: (row: 18, column: 6))
-            gridModel.setValue(.block(color: .blue), at: (row: 18, column: 7))
-            gridModel.setValue(.block(color: .blue), at: (row: 18, column: 8))
-            gridModel.setValue(.block(color: .blue), at: (row: 18, column: 9))
+            gridModel.setValue(.inactive(color: .blue), at: (row: 18, column: 0))
+            gridModel.setValue(.inactive(color: .blue), at: (row: 18, column: 1))
+            gridModel.setValue(.inactive(color: .blue), at: (row: 18, column: 2))
+            gridModel.setValue(.inactive(color: .blue), at: (row: 18, column: 3))
+            gridModel.setValue(.inactive(color: .blue), at: (row: 18, column: 5))
+            gridModel.setValue(.inactive(color: .blue), at: (row: 18, column: 6))
+            gridModel.setValue(.inactive(color: .blue), at: (row: 18, column: 7))
+            gridModel.setValue(.inactive(color: .blue), at: (row: 18, column: 8))
+            gridModel.setValue(.inactive(color: .blue), at: (row: 18, column: 9))
 
-            gridModel.setValue(.block(color: .yellow), at: (row: 17, column: 0))
-            gridModel.setValue(.block(color: .yellow), at: (row: 17, column: 1))
-            gridModel.setValue(.block(color: .yellow), at: (row: 17, column: 2))
-            gridModel.setValue(.block(color: .yellow), at: (row: 17, column: 3))
-            gridModel.setValue(.block(color: .yellow), at: (row: 17, column: 5))
-            gridModel.setValue(.block(color: .yellow), at: (row: 17, column: 6))
-            gridModel.setValue(.block(color: .yellow), at: (row: 17, column: 7))
-            gridModel.setValue(.block(color: .yellow), at: (row: 17, column: 8))
-            gridModel.setValue(.block(color: .yellow), at: (row: 17, column: 9))
+            gridModel.setValue(.inactive(color: .yellow), at: (row: 17, column: 0))
+            gridModel.setValue(.inactive(color: .yellow), at: (row: 17, column: 1))
+            gridModel.setValue(.inactive(color: .yellow), at: (row: 17, column: 2))
+            gridModel.setValue(.inactive(color: .yellow), at: (row: 17, column: 3))
+            gridModel.setValue(.inactive(color: .yellow), at: (row: 17, column: 5))
+            gridModel.setValue(.inactive(color: .yellow), at: (row: 17, column: 6))
+            gridModel.setValue(.inactive(color: .yellow), at: (row: 17, column: 7))
+            gridModel.setValue(.inactive(color: .yellow), at: (row: 17, column: 8))
+            gridModel.setValue(.inactive(color: .yellow), at: (row: 17, column: 9))
 
-            gridModel.setValue(.block(color: .pink), at: (row: 16, column: 0))
-            gridModel.setValue(.block(color: .pink), at: (row: 16, column: 1))
-            gridModel.setValue(.block(color: .pink), at: (row: 16, column: 2))
-            gridModel.setValue(.block(color: .pink), at: (row: 16, column: 3))
-            gridModel.setValue(.block(color: .pink), at: (row: 16, column: 5))
-            gridModel.setValue(.block(color: .pink), at: (row: 16, column: 6))
-            gridModel.setValue(.block(color: .pink), at: (row: 16, column: 7))
-            gridModel.setValue(.block(color: .pink), at: (row: 16, column: 8))
-            gridModel.setValue(.block(color: .pink), at: (row: 16, column: 9))
+            gridModel.setValue(.inactive(color: .pink), at: (row: 16, column: 0))
+            gridModel.setValue(.inactive(color: .pink), at: (row: 16, column: 1))
+            gridModel.setValue(.inactive(color: .pink), at: (row: 16, column: 2))
+            gridModel.setValue(.inactive(color: .pink), at: (row: 16, column: 3))
+            gridModel.setValue(.inactive(color: .pink), at: (row: 16, column: 5))
+            gridModel.setValue(.inactive(color: .pink), at: (row: 16, column: 6))
+            gridModel.setValue(.inactive(color: .pink), at: (row: 16, column: 7))
+            gridModel.setValue(.inactive(color: .pink), at: (row: 16, column: 8))
+            gridModel.setValue(.inactive(color: .pink), at: (row: 16, column: 9))
 
             let activePiece = LinePiece()
             activePiece.orientation = .up
             activePiece.gridPosition = (row: 0, column: 4)
-            gridModel.setValues(.activeBlock(color: activePiece.color), at: activePiece.gridPositions)
+            gridModel.setValues(.active(color: activePiece.color), at: activePiece.gridPositions)
             self.activePiece = activePiece
         case 4:
             gridModel = GridModelFactory.emptyModel
             
             let activePiece = ZPiece()
             activePiece.gridPosition = (row: 2, column: 4)
-            gridModel.setValues(.activeBlock(color: activePiece.color), at: activePiece.gridPositions)
+            gridModel.setValues(.active(color: activePiece.color), at: activePiece.gridPositions)
             self.activePiece = activePiece
 
             gridView.frame.origin.x = offset
@@ -276,38 +282,38 @@ class TutorialViewController: GameViewController {
         case 5:
             gridModel = GridModelFactory.emptyModel
             
-            gridModel.setValue(.block(color: .purple), at: (row: 19, column: 0))
-            gridModel.setValue(.block(color: .purple), at: (row: 19, column: 1))
-            gridModel.setValue(.block(color: .purple), at: (row: 19, column: 2))
-            gridModel.setValue(.block(color: .purple), at: (row: 19, column: 3))
+            gridModel.setValue(.inactive(color: .purple), at: (row: 19, column: 0))
+            gridModel.setValue(.inactive(color: .purple), at: (row: 19, column: 1))
+            gridModel.setValue(.inactive(color: .purple), at: (row: 19, column: 2))
+            gridModel.setValue(.inactive(color: .purple), at: (row: 19, column: 3))
             gridModel.setValue(.effect(effect: .fire), at: (row: 19, column: 4))
-            gridModel.setValue(.block(color: .purple), at: (row: 19, column: 5))
-            gridModel.setValue(.block(color: .purple), at: (row: 19, column: 6))
-            gridModel.setValue(.block(color: .purple), at: (row: 19, column: 7))
-            gridModel.setValue(.block(color: .purple), at: (row: 19, column: 8))
-            gridModel.setValue(.block(color: .purple), at: (row: 19, column: 9))
+            gridModel.setValue(.inactive(color: .purple), at: (row: 19, column: 5))
+            gridModel.setValue(.inactive(color: .purple), at: (row: 19, column: 6))
+            gridModel.setValue(.inactive(color: .purple), at: (row: 19, column: 7))
+            gridModel.setValue(.inactive(color: .purple), at: (row: 19, column: 8))
+            gridModel.setValue(.inactive(color: .purple), at: (row: 19, column: 9))
             
-            gridModel.setValue(.block(color: .blue), at: (row: 18, column: 0))
-            gridModel.setValue(.block(color: .blue), at: (row: 18, column: 1))
-            gridModel.setValue(.block(color: .blue), at: (row: 18, column: 2))
-            gridModel.setValue(.block(color: .blue), at: (row: 18, column: 3))
-            gridModel.setValue(.block(color: .blue), at: (row: 18, column: 5))
-            gridModel.setValue(.block(color: .blue), at: (row: 18, column: 6))
-            gridModel.setValue(.block(color: .blue), at: (row: 18, column: 7))
-            gridModel.setValue(.block(color: .blue), at: (row: 18, column: 8))
-            gridModel.setValue(.block(color: .blue), at: (row: 18, column: 9))
+            gridModel.setValue(.inactive(color: .blue), at: (row: 18, column: 0))
+            gridModel.setValue(.inactive(color: .blue), at: (row: 18, column: 1))
+            gridModel.setValue(.inactive(color: .blue), at: (row: 18, column: 2))
+            gridModel.setValue(.inactive(color: .blue), at: (row: 18, column: 3))
+            gridModel.setValue(.inactive(color: .blue), at: (row: 18, column: 5))
+            gridModel.setValue(.inactive(color: .blue), at: (row: 18, column: 6))
+            gridModel.setValue(.inactive(color: .blue), at: (row: 18, column: 7))
+            gridModel.setValue(.inactive(color: .blue), at: (row: 18, column: 8))
+            gridModel.setValue(.inactive(color: .blue), at: (row: 18, column: 9))
             
-            gridModel.setValue(.block(color: .yellow), at: (row: 17, column: 0))
-            gridModel.setValue(.block(color: .yellow), at: (row: 17, column: 1))
-            gridModel.setValue(.block(color: .yellow), at: (row: 17, column: 2))
-            gridModel.setValue(.block(color: .yellow), at: (row: 17, column: 3))
-            gridModel.setValue(.block(color: .yellow), at: (row: 17, column: 7))
-            gridModel.setValue(.block(color: .yellow), at: (row: 17, column: 8))
-            gridModel.setValue(.block(color: .yellow), at: (row: 17, column: 9))
+            gridModel.setValue(.inactive(color: .yellow), at: (row: 17, column: 0))
+            gridModel.setValue(.inactive(color: .yellow), at: (row: 17, column: 1))
+            gridModel.setValue(.inactive(color: .yellow), at: (row: 17, column: 2))
+            gridModel.setValue(.inactive(color: .yellow), at: (row: 17, column: 3))
+            gridModel.setValue(.inactive(color: .yellow), at: (row: 17, column: 7))
+            gridModel.setValue(.inactive(color: .yellow), at: (row: 17, column: 8))
+            gridModel.setValue(.inactive(color: .yellow), at: (row: 17, column: 9))
             
             let activePiece = LPiece()
             activePiece.gridPosition = (row: 0, column: 4)
-            gridModel.setValues(.activeBlock(color: activePiece.color), at: activePiece.gridPositions)
+            gridModel.setValues(.active(color: activePiece.color), at: activePiece.gridPositions)
             self.activePiece = activePiece
         default:
             break

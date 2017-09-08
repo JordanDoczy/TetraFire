@@ -82,11 +82,12 @@ class GridModel: NSObject, NSCoding, GridViewDataSource {
     }
     
     func dropRows(rows: [Int]) {
+        let fireIndexes = blocks.indexesOf(BlockType.effect(effect: .fire))
+        
         rows.forEach { row in
             dropRowsAboveRow(completedRow: row)
         }
         
-        let fireIndexes = blocks.indexesOf(BlockType.effect(effect: .fire))
         fireIndexes.forEach { index in
             setValue(.effect(effect: .fire), at: index)
         }
@@ -212,14 +213,14 @@ class GridModel: NSObject, NSCoding, GridViewDataSource {
         guard let element = element else { return true }
         
         switch element {
-        case .activeBlock(_), .ghost(_): return true
+        case .active(_), .ghost(_): return true
         case .effect(let effect): return effect != .fire
-        case .block(_): return false
+        case .inactive(_): return false
         }
     }
     
     func isValidElement(_ element: BlockType?) -> Bool {
-        guard let element = element, case .block(_) = element else {
+        guard let element = element, case .inactive(_) = element else {
             return false
         }
         return true
@@ -254,11 +255,14 @@ class GridModel: NSObject, NSCoding, GridViewDataSource {
         return true
     }
     
-    func removeActiveBlocks() {
+    func removeActiveAndGhostBlocks() {
         for (index, element) in blocks.enumerated() {
-            if let blockType = element,
-                case BlockType.activeBlock(_) = blockType {
+            guard let element = element else { continue }
+            
+            switch element {
+            case .active(_), .ghost(_):
                 blocks[index] = nil
+            default: break
             }
         }
     }

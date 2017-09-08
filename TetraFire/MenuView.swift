@@ -8,11 +8,12 @@
 
 import UIKit
 import SpriteKit
+import AVFoundation
 
 protocol MenuViewDelegate: class {
     func newGame(gameMode: GameMode, level: Int)
     func resumeGame()
-    func tutorial()
+    func showTutorial()
     func menuDidShow(menuView: MenuView)
     func menuDidHide(menuView: MenuView)
     func menuWillShow(menuView: MenuView)
@@ -525,7 +526,7 @@ class MenuView: UIView {
     }
 
     internal func tutorial() {
-        delegate?.tutorial()
+        delegate?.showTutorial()
     }
     
     class ToggleButton: MenuButton {
@@ -599,6 +600,9 @@ class MenuView: UIView {
             didSet {
                 UserData.shared.vibrate = active
                 updateLabel()
+                if active && oldValue == false {
+                AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
+                }
             }
         }
         

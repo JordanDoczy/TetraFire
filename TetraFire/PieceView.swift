@@ -67,7 +67,7 @@ class PieceView: UIView {
             
             for (index, block) in blocks.enumerated() {
                 let position = gridPositions[index]
-                block.type = .block(color: pieceModel.color)
+                block.type = .inactive(color: pieceModel.color)
                 positionBlock(block, at: position)
             }
         }

@@ -10,16 +10,16 @@ import UIKit
 
 enum BlockType {
     
-    case activeBlock(color: Color)
-    case block(color: Color)
+    case active(color: Color)
+    case inactive(color: Color)
     case ghost(color: Color)
     case effect(effect: EffectType)
     
     var rawValue: [Int] {
         switch self {
-        case .activeBlock(let color):
+        case .active(let color):
             return [0, color.rawValue]
-        case .block(let color):
+        case .inactive(let color):
             return [1, color.rawValue]
         case .ghost(let color):
             return [2, color.rawValue]
@@ -37,10 +37,10 @@ enum BlockType {
         switch blockType {
         case 0:
             guard let color = Color(rawValue: subType) else { return nil }
-            self = .activeBlock(color: color)
+            self = .active(color: color)
         case 1:
             guard let color = Color(rawValue: subType) else { return nil }
-            self = .block(color: color)
+            self = .inactive(color: color)
         case 2:
             guard let color = Color(rawValue: subType) else { return nil }
             self = .ghost(color: color)
@@ -54,8 +54,8 @@ enum BlockType {
 
     var color: UIColor? {
         switch self {
-        case .activeBlock(let color): return color.uiColor
-        case .block(let color): return color.uiColor
+        case .active(let color): return color.uiColor
+        case .inactive(let color): return color.uiColor
         case .ghost(let color): return color.uiColor.asGhost
         case .effect(_): return nil
         }

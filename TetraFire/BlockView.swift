@@ -22,7 +22,6 @@ class BlockView: UIView {
             }
             
             overlay.alpha = 1
-            //overlay.isHidden = false
             overlay.backgroundColor = type.color
 
             switch(type) {
@@ -33,7 +32,7 @@ class BlockView: UIView {
                         fire(delay: 0.4)
                     }
                 }
-            case .activeBlock(_), .block(_), .ghost(_):
+            case .active(_), .inactive(_), .ghost(_):
                 isHidden = false
             default: break
             }
@@ -122,7 +121,7 @@ class BlockView: UIView {
     }
     
     override func hide(with delay: Delay = 0.0, completion:((Bool) -> Void)? = nil) {
-        //overlay.hide(with: delay, completion: completion)
+        overlay.hide(with: delay, completion: completion)
     }
     
     func rain(delay: Double = 0.0, at position: CGPoint) {
@@ -137,7 +136,7 @@ class BlockView: UIView {
     }
     
     override func show(with delay: Delay = 0.0, completion:((Bool) -> Void)? = nil) {
-        //overlay.show(with: delay, completion: completion)
+        overlay.show(with: delay, completion: completion)
     }
 
     func smoke(delay: Double = 0.0) {

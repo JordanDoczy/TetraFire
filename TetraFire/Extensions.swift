@@ -14,6 +14,26 @@ extension BlockType: Equatable {
     }
 }
 
+extension Bundle {
+    
+    var appName: String {
+        return infoDictionary?["CFBundleName"] as! String
+    }
+    
+    var bundleId: String {
+        return bundleIdentifier!
+    }
+    
+    var versionNumber: String {
+        return infoDictionary?["CFBundleShortVersionString"] as! String
+    }
+    
+    var buildNumber: String {
+        return infoDictionary?["CFBundleVersion"] as! String
+    }
+    
+}
+
 extension UIColor {
     static let tetraPurple = #colorLiteral(red: 0.6, green: 0.2823529412, blue: 0.9411764706, alpha: 0.8)
     static let tetraPink   = #colorLiteral(red: 0.7411764706, green: 0.1490196078, blue: 0.7098039216, alpha: 0.8)

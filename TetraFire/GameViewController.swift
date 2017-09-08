@@ -72,6 +72,7 @@ class GameViewController: UIViewController, HUDViewDataSource {
     internal lazy var backgroundView: BackgroundView = { [unowned self] in
         let backgroundView = BackgroundView(frame: self.view.frame)
         backgroundView.isUserInteractionEnabled = false
+        backgroundView.isHidden = true
         return backgroundView
         }()
     
@@ -162,7 +163,6 @@ class GameViewController: UIViewController, HUDViewDataSource {
         particleView.allowsTransparency = true
         particleView.layer.zPosition = 1000
         particleView.frame.size = self.view.frame.size
-        particleView.presentScene(self.particleScene)
         return particleView
         }()
     
@@ -175,7 +175,7 @@ class GameViewController: UIViewController, HUDViewDataSource {
                                                         width: panelWidth,
                                                         height: panelHeight))
         sidePanelView.blockSize = CGSize(width: self.columnWidth, height: self.columnWidth)
-        sidePanelView.dataSource = self.sidePanelModel
+        sidePanelView.dataSource = self
         sidePanelView.isHidden = true
         return sidePanelView
         }()
@@ -189,26 +189,27 @@ class GameViewController: UIViewController, HUDViewDataSource {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        AudioManager.shared.playBackgroundMusic()
+        
         addGestures()
         addSubviews()
-     
-        hudView.update()
-        gridView.update()
-        sidePanelView.update()
-        
-        AudioManager.shared.playBackgroundMusic()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        backgroundView.startAnimating()
+        particleView.presentScene(particleScene)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        backgroundView.stopAnimating()
+        particleScene?.removeAllChildren()
+        super.viewWillDisappear(animated)
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        backgroundView.startAnimating()
         appeared()
-    }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        backgroundView.stopAnimating()
     }
     
     // MARK: - Set Up Methods
@@ -237,11 +238,12 @@ class GameViewController: UIViewController, HUDViewDataSource {
     }
     
     internal func appeared() {
-        //if UserData.shared.skipTutorial {
-            menuView.show()
-        //} else {
-        //    tutorial()
-        //}
+        if UserData.shared.skipTutorial {
+            showMenu()
+            backgroundView.show()
+        } else {
+            showTutorial()
+        }
     }
     
     
@@ -392,9 +394,14 @@ class GameViewController: UIViewController, HUDViewDataSource {
     internal func pauseGame() {
         gameState = .paused
         
+        particleScene?.removeAllChildren()
+        gridView.isHidden = true
+        sidePanelView.isHidden = true
+        hudView.isHidden = true
+        holdView.isHidden = true
+        
         stopTimer()
         saveState()
-        menuView.show()
     }
     
     fileprivate static func pointsNeededForLevel(level: Int) -> Int {
@@ -416,7 +423,7 @@ class GameViewController: UIViewController, HUDViewDataSource {
         sidePanelModel.reset()
     }
     
-    fileprivate func saveState() {
+    internal func saveState() {
         UserData.shared.activePiece = activePiece
         UserData.shared.gameMode = gameMode
         UserData.shared.gridModel = gridModel
@@ -424,6 +431,7 @@ class GameViewController: UIViewController, HUDViewDataSource {
         UserData.shared.level = level
         UserData.shared.score = score
         UserData.shared.sidePanelModel = sidePanelModel
+        UserData.shared.versionNumber = Bundle.main.versionNumber
     }
     
     fileprivate static func getPoints(numberOfCompletedRows: Int) -> Int {
@@ -444,9 +452,9 @@ class GameViewController: UIViewController, HUDViewDataSource {
 
         gameState = .setPiece
         
-        gridModel.removeActiveBlocks()
-        gridModel.setValues(.block(color: activePiece.color), at: activePiece.gridPositions)
-        
+        gridModel.removeActiveAndGhostBlocks()
+        gridModel.setValues(.inactive(color: activePiece.color), at: activePiece.gridPositions)
+                
         AudioManager.shared.playSound(fileName: Assets.Sounds.thud)
         didSwap = false
         
@@ -454,6 +462,7 @@ class GameViewController: UIViewController, HUDViewDataSource {
         timerState = .update
         
         let completedRows = gridModel.getCompletedRows()
+        _ = gridModel.removeFire(fromRows: completedRows)
         score += GameViewController.getPoints(numberOfCompletedRows: completedRows.count)
         
         if completedRows.count > 0 {
@@ -499,8 +508,19 @@ class GameViewController: UIViewController, HUDViewDataSource {
         }
         
         self.activePiece = activePiece
-        gridModel.removeActiveBlocks()
-        gridModel.setValues(.activeBlock(color: activePiece.color), at: activePiece.gridPositions)
+        gridModel.removeActiveAndGhostBlocks()
+        
+        let ghostPositions = gridModel.getHighestOpenPosition(positions: activePiece.gridPositions)
+        
+        let ghostMaxRow = ghostPositions.map { $0.row }.max() ?? -1
+        let activePieceMaxRow = activePiece.gridPositions.map { $0.row }.max() ?? -1
+        
+        if ghostMaxRow > activePieceMaxRow {
+            gridModel.setValues(.ghost(color: activePiece.color), at: ghostPositions)
+        }
+        
+        gridModel.setValues(.active(color: activePiece.color), at: activePiece.gridPositions)
+        
         gridView.update()
     }
 
@@ -565,27 +585,29 @@ class GameViewController: UIViewController, HUDViewDataSource {
         }
         
         guard let activePiece = activePiece else { return }
-        let currentGridPosition = activePiece.gridPosition
-        
         
         if let y = panLocation?.y, y - sender.location(in: view).y > 50 {
             holdPiece()
-        } else if let x = panLocation?.x {
-            if abs(x - sender.location(in: view).x) >= boxWidth / 2 {
-                if x - sender.location(in: view).x >= 0 {
-                    activePiece.gridPosition.column -= 1
-                } else {
-                    activePiece.gridPosition.column += 1
+        } else if let x = panLocation?.x,
+            abs(x - sender.location(in: view).x) >= boxWidth / 2 {
+            
+            var gridPosition = activePiece.gridPosition
+            if x - sender.location(in: view).x >= 0 {
+                if gridPosition.column > 0 {
+                    gridPosition.column -= 1
                 }
-                
-                if gridModel.isValidMove(gridPositions: activePiece.gridPositions) {
-                    updateGridModelWithActivePiece(activePiece: activePiece)
-                } else {
-                    activePiece.gridPosition = currentGridPosition
-                }
-                
-                panLocation = sender.location(in: view)
+            } else {
+                gridPosition.column += 1
             }
+            
+            let gridPositionsToTest = activePiece.getGridPositions(at: gridPosition)
+            
+            if gridModel.isValidMove(gridPositions: gridPositionsToTest) {
+                activePiece.gridPosition = gridPosition
+                updateGridModelWithActivePiece(activePiece: activePiece)
+            }
+            
+            panLocation = sender.location(in: view)
         }
     }
     
@@ -636,7 +658,7 @@ extension GameViewController: GameOverViewDelegate {
     
     internal func quit() {
         gameOverView.hide()
-        menuView.show()
+        showMenu()
     }
 }
 
@@ -683,21 +705,12 @@ extension GameViewController: MenuViewDelegate {
         }
     }
     
-    internal func menuDidShow(menuView: MenuView) {
-        print("menuDidShow")
-    }
+    internal func menuDidShow(menuView: MenuView) { }
     
-    internal func menuWillHide(menuView: MenuView) {
-        print("menuWillHide")
-    }
+    internal func menuWillHide(menuView: MenuView) { }
     
     internal func menuWillShow(menuView: MenuView) {
-        particleScene?.removeAllChildren()
-        
-        gridView.isHidden = true
-        sidePanelView.isHidden = true
-        hudView.isHidden = true
-        holdView.isHidden = true
+        pauseGame()
     }
     
     internal func newGame(gameMode: GameMode, level: Int = 1) {
@@ -728,6 +741,7 @@ extension GameViewController: MenuViewDelegate {
          gameState = .inPlay
         
         menuView.hide()
+        holdView.update()
         hudView.update()
         gridView.update()
         sidePanelView.update()
@@ -735,7 +749,7 @@ extension GameViewController: MenuViewDelegate {
         startTimer(with: .update)
     }
     
-    internal func tutorial() {
+    internal func showTutorial() {
         gameState = .tutorial
         menuView.hide()
     }
@@ -751,5 +765,11 @@ extension GameViewController: MenuViewDataSource {
         case .classic: return UserData.shared.highestLevelClassicMode
         case .fire: return UserData.shared.highestLevelFireMode
         }
+    }
+}
+
+extension GameViewController: SidePanelDataSource {
+    internal func getPieceQueue() -> [PieceModel] {
+        return sidePanelModel.pieces
     }
 }

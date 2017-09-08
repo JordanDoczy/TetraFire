@@ -27,7 +27,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         particleScene?.removeAllChildren()
 
         if let gameViewController = window?.rootViewController as? GameViewController {
-            gameViewController.pauseGame()
+            gameViewController.saveState()
         }
     
     }

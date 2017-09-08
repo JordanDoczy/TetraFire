@@ -36,6 +36,7 @@ class ModalView: UIView{
         label.textAlignment = .left
         label.textColor = .text
         label.font = .modal
+        label.isUserInteractionEnabled = false
         return label
     }()
     

@@ -196,7 +196,7 @@ class TetraFireGridView: GridView, UIGridDataSource {
         func dust(blocks: [BlockView]) {
             blocks.forEach {
                 if let blockType = dataSource?.value(at: (row: $0.row, column: $0.column)),
-                    case .block(_) = blockType {
+                    case .inactive(_) = blockType {
                     $0.dust(delay: 0.3)
                 }
             }
@@ -214,12 +214,14 @@ class TetraFireGridView: GridView, UIGridDataSource {
         }
         
         var blocksToRemove = [BlockView]()
-        completedRows.forEach {
-            blocksToRemove += getBlocks(fromRow: $0)
+        for row in completedRows{
+            blocksToRemove += getBlocks(fromRow: row)
         }
-        blocksToRemove = blocksToRemove.filter { $0.type != nil }
+        blocksToRemove = blocksToRemove.filter({ $0.type != nil})
         
-        let nonEmptyBlocks = self.blocks.filter { $0.type != nil && $0.type != .effect(effect: .fire) }
+        let nonEmptyBlocks = blocks.filter {
+            $0.type != nil && $0.type != .effect(effect: .fire)
+        }
         
         dowseFire(blocksToRemove: blocksToRemove)
         explode(blocks: blocksToRemove)
@@ -240,7 +242,7 @@ class TetraFireGridView: GridView, UIGridDataSource {
             let explodeIndicies = GridModelFactory.indexesForExplodeAnimation
             for index in 0 ..< explodeIndicies.count {
                 let block = blocks[explodeIndicies[index]]
-                block.type = .block(color: Color.getRandom())
+                block.type = .inactive(color: Color.getRandom())
                 block.overlay.alpha = 0
                 
                 if index == explodeIndicies.count - 1 {
