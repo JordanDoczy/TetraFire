@@ -323,12 +323,14 @@ class GameViewController: UIViewController, HUDViewDataSource {
         gameState = .gameOver
         previousLevel = level
         
+        UserData.shared.level = level
         if score > UserData.shared.topScore {
             UserData.shared.topScore = score
             gameOverView.showWithTopScore(topScore: score)
         } else {
             gameOverView.show()
         }
+        
         
         reset()
         particleScene?.removeAllChildren()
