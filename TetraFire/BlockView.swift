@@ -92,7 +92,7 @@ class BlockView: UIView {
             _ = scene.runEffect(forKey: keyPrefix + EffectType.dust.fileName,
                                 effect: .dust,
                                 position: scene.convertPoint(fromView: point),
-                                duration:2.0,
+                                duration: 2.0,
                                 delay: delay,
                                 force: false)
         }

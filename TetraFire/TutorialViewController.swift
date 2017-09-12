@@ -79,6 +79,14 @@ class TutorialViewController: GameViewController {
         return view
     }()
     
+    fileprivate lazy var infoLabel: UILabel = { [unowned self] in
+        let label = UILabel()
+        label.textAlignment = .center
+        label.textColor = .text
+        label.font = .modal
+        return label
+        }()
+    
     fileprivate lazy var tutorialButton: UIButton = { [unowned self] in
         let button = UIButton()
         button.frame.size = CGSize(width: 20, height: 20)
@@ -106,8 +114,9 @@ class TutorialViewController: GameViewController {
         view.addSubview(tutorialButton)
         view.addSubview(modalOverlayView)
         view.addSubview(modalView)
+        view.addSubview(infoLabel)
         
-        gridView.center = view.center        
+        gridView.center = view.center
     }
     
     override func appeared() {
@@ -208,12 +217,23 @@ class TutorialViewController: GameViewController {
             activePiece.gridPosition = (row: 2, column: 0)
             gridModel.setValues(.active(color: activePiece.color), at: activePiece.gridPositions)
             self.activePiece = activePiece
+            
+            infoLabel.text = Strings.swipeRight
+            infoLabel.sizeToFit()
+            infoLabel.center = gridView.center
+            infoLabel.frame.origin.y = gridView.frame.origin.y - (spacer * 2)
         case 2:
             gridModel = GridModelFactory.emptyModel
             let activePiece = TPiece()
             activePiece.gridPosition = (row: 1, column: 3)
             gridModel.setValues(.active(color: activePiece.color), at: activePiece.gridPositions)
             self.activePiece = activePiece
+            
+            infoLabel.text = Strings.tap3Times
+            infoLabel.sizeToFit()
+            infoLabel.center = gridView.center
+            infoLabel.frame.origin.y = gridView.frame.origin.y - (spacer * 2)
+
         case 3:
             gridModel = GridModelFactory.emptyModel
             gridModel.setValue(.inactive(color: .purple), at: (row: 19, column: 0))
@@ -262,6 +282,12 @@ class TutorialViewController: GameViewController {
             activePiece.gridPosition = (row: 0, column: 4)
             gridModel.setValues(.active(color: activePiece.color), at: activePiece.gridPositions)
             self.activePiece = activePiece
+            
+            infoLabel.text = Strings.pressAndHold
+            infoLabel.sizeToFit()
+            infoLabel.center = gridView.center
+            infoLabel.frame.origin.y = gridView.frame.origin.y - (spacer * 2)
+            
         case 4:
             gridModel = GridModelFactory.emptyModel
             
@@ -274,6 +300,11 @@ class TutorialViewController: GameViewController {
             gridView.frame.origin.y = sidePanelView.frame.origin.y
             sidePanelModel.reset()
             sidePanelView.update()
+            
+            infoLabel.text = Strings.swipeUp
+            infoLabel.sizeToFit()
+            infoLabel.center = gridView.center
+            infoLabel.frame.origin.y = gridView.frame.origin.y - (spacer * 2)
         case 5:
             gridModel = GridModelFactory.emptyModel
             
@@ -310,6 +341,12 @@ class TutorialViewController: GameViewController {
             activePiece.gridPosition = (row: 0, column: 4)
             gridModel.setValues(.active(color: activePiece.color), at: activePiece.gridPositions)
             self.activePiece = activePiece
+            
+            infoLabel.text = Strings.pressAndHold
+            infoLabel.sizeToFit()
+            infoLabel.center = gridView.center
+            infoLabel.frame.origin.y = gridView.frame.origin.y - (spacer * 2)
+
         default:
             break
         }
@@ -365,6 +402,7 @@ extension TutorialViewController: ModalViewDelegate {
             gameState = .inPlay
             gridView.update()
             gridView.show()
+            infoLabel.show()
             if tutorial >= 4 {
                 sidePanelView.show()
                 holdView.show()
@@ -391,6 +429,7 @@ extension TutorialViewController: ModalViewDelegate {
         
         gameState = .tutorial
         gridView.hide()
+        infoLabel.hide()
         sidePanelView.hide()
         holdView.hide()
     }

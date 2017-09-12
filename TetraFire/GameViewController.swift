@@ -205,6 +205,7 @@ class GameViewController: UIViewController, HUDViewDataSource {
         backgroundView.stopAnimating()
         particleScene?.removeAllChildren()
         particleScene?.removeAllActions()
+        particleView.presentScene(nil)
         super.viewWillDisappear(animated)
     }
     
