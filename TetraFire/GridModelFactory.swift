@@ -212,8 +212,8 @@ extension GridModelFactory {
     
     static var level2: GridModel {
         let model = GridModel(rows: Constants.rows, columns: Constants.columns)
-        model.setValue(.effect(effect: .fire), at: (row: 19, column: 9))
-        model.setValue(.effect(effect: .fire), at: (row: 16, column: 0))
+        model.setValue(.effect(effect: .fire), at: (row: 19, column: 4))
+        model.setValue(.effect(effect: .fire), at: (row: 18, column: 4))
         return model
     }
     

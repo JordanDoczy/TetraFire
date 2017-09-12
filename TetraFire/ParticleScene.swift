@@ -24,8 +24,18 @@ class ParticleScene: SKScene {
     }
     
     override func removeAllChildren() {
-        super.removeAllChildren()
         effects.removeAll()
+        super.removeAllChildren()
+    }
+    
+    override func removeAllActions() {
+        actions.removeAll()
+        super.removeAllActions()
+    }
+
+    override func removeAction(forKey key: String) {
+        actions.removeValue(forKey: key)
+        super.removeAction(forKey: key)
     }
     
     func removeEffect(forKey key: String, delay: Double = 0.0){
@@ -66,6 +76,8 @@ class ParticleScene: SKScene {
                     skNode.resetSimulation()
                     strongSelf.addChild(skNode)
                 }
+                
+                strongSelf.removeAction(forKey: key)
             }
             
             if duration >= 0 {

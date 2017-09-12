@@ -204,6 +204,7 @@ class GameViewController: UIViewController, HUDViewDataSource {
     override func viewWillDisappear(_ animated: Bool) {
         backgroundView.stopAnimating()
         particleScene?.removeAllChildren()
+        particleScene?.removeAllActions()
         super.viewWillDisappear(animated)
     }
     

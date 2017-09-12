@@ -93,11 +93,6 @@ class TutorialViewController: GameViewController {
         }()
     
     // MARK: - Methods
-    override func viewWillDisappear(_ animated: Bool) {
-        particleScene?.removeAllChildren()
-        super.viewWillDisappear(animated)
-    }
-    
     override func addSubviews() {
         view.addSubview(backgroundView)
         view.addSubview(flashView)
