@@ -130,12 +130,12 @@ class TutorialViewController: GameViewController {
         backgroundView.show()
     }
     
-    internal func back() {
+    @objc internal func back() {
         tutorial -= 1
         particleScene?.removeAllChildren()
     }
     
-    internal func close() {
+    @objc internal func close() {
         UserData.shared.skipTutorial = true
         performSegue(withIdentifier: Constants.TutorialViewController.unwindToGameSegue, sender: nil)
     }
@@ -171,7 +171,7 @@ class TutorialViewController: GameViewController {
         
     }
     
-    internal func delayComplete() {
+    @objc internal func delayComplete() {
         tutorialComplete()
     }
     
@@ -373,7 +373,7 @@ class TutorialViewController: GameViewController {
         self.timerState = timerState
     }
 
-    internal func showModal() {
+    @objc internal func showModal() {
         modalOverlayView.show()
         modalView.show()
     }

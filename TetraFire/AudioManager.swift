@@ -26,7 +26,7 @@ class AudioManager: NSObject{
         }
     }
 
-    internal func adjustVolume(timer: Timer) {
+    @objc internal func adjustVolume(timer: Timer) {
         if let volumeAdjustment = timer.userInfo as? VolumeAdjustment {
             volumeAdjustment.player.volume += volumeAdjustment.adjustment
             if volumeAdjustment.player.volume >= 1 || volumeAdjustment.player.volume <= 0 {
@@ -36,7 +36,7 @@ class AudioManager: NSObject{
         }
     }
     
-    internal func changeMusic() {
+    @objc internal func changeMusic() {
         if backgroundMusicIndex >= 0 && backgroundMusicIndex < Assets.Sounds.bgm.count {
             fadeOut(fileName: Assets.Sounds.bgm[backgroundMusicIndex])
         } else {

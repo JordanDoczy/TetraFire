@@ -45,10 +45,6 @@ class BackgroundView : UIView {
     fileprivate var performEffect: Bool = false
     
     override required init(frame: CGRect) {
-        defer {
-            currentIndex = Int(arc4random_uniform(UInt32(model.count)))
-        }
-
         super.init(frame: frame)
         backgroundColor = .black
         addSubview(imageView)
@@ -77,6 +73,7 @@ class BackgroundView : UIView {
     }
     
     func startAnimating() {
+        currentIndex = Int(arc4random_uniform(UInt32(model.count)))
         performEffect = true
         
         let range = 50

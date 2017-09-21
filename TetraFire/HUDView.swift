@@ -102,7 +102,7 @@ class HUDView: UIView {
         path.fill()
     }
     
-    func pauseGame() {
+    @objc func pauseGame() {
         delegate?.showMenu()
     }
     

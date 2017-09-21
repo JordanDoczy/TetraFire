@@ -347,6 +347,7 @@ class GameViewController: UIViewController, HUDViewDataSource {
     internal func holdPiece() {
         guard didSwap == false else { return }
         
+        AudioManager.shared.playSound(fileName: Assets.Sounds.pop)
         activePiece?.gridPosition = (row: 0, column: 0)
         let currentHeldPiece = heldPiece
         heldPiece = activePiece
@@ -355,7 +356,7 @@ class GameViewController: UIViewController, HUDViewDataSource {
         didSwap = true
     }
     
-    internal func incrementRow() {
+    @objc internal func incrementRow() {
         guard gameState == .inPlay else{
             return
         }
@@ -448,7 +449,7 @@ class GameViewController: UIViewController, HUDViewDataSource {
         }
     }
     
-    internal func setPiece() {
+    @objc internal func setPiece() {
         guard let activePiece = activePiece else {
             return
         }
@@ -565,7 +566,7 @@ class GameViewController: UIViewController, HUDViewDataSource {
     }
     
     // MARK: - Gesture Recognizers
-    internal func onLongPress(sender: UILongPressGestureRecognizer) {
+    @objc internal func onLongPress(sender: UILongPressGestureRecognizer) {
         guard gameState == .inPlay else {
             return
         }
@@ -582,7 +583,7 @@ class GameViewController: UIViewController, HUDViewDataSource {
         }
     }
     
-    internal func onPan(sender: UIPanGestureRecognizer) {
+    @objc internal func onPan(sender: UIPanGestureRecognizer) {
         guard gameState == .inPlay else{
             return
         }
@@ -613,7 +614,7 @@ class GameViewController: UIViewController, HUDViewDataSource {
         }
     }
     
-    internal func onTap(sender: UITapGestureRecognizer) {
+    @objc internal func onTap(sender: UITapGestureRecognizer) {
         guard gameState == .inPlay else {
             return
         }
@@ -671,7 +672,7 @@ extension GameViewController: GridViewDataSource {
 }
 
 extension GameViewController: GridViewDelegate {
-    internal func gridViewDidUpdate(gridView: GridView) {
+    @objc internal func gridViewDidUpdate(gridView: GridView) {
         resumeTimer()
         
         if gameState == .setPiece {

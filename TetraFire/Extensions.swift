@@ -82,7 +82,7 @@ extension Int {
 }
 
 extension UIView {
-    func hide(with delay: Delay = 0.0, completion: ((Bool)->Void)? = nil) {
+    @objc func hide(with delay: Delay = 0.0, completion: ((Bool)->Void)? = nil) {
         
         UIView.animate(withDuration: 0.5,
             delay: delay,
@@ -94,7 +94,7 @@ extension UIView {
         )
     }
     
-    func show(with delay: Delay = 0.0, completion: ((Bool)->Void)? = nil) {
+    @objc func show(with delay: Delay = 0.0, completion: ((Bool)->Void)? = nil) {
         if isHidden {
             alpha = 0
             isHidden = false

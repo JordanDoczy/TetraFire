@@ -85,7 +85,7 @@ class MenuView: UIView {
         }
     }
     
-    internal func backToMainMenu(sender: UIButton) {
+    @objc internal func backToMainMenu(sender: UIButton) {
         AudioManager.shared.playSound(fileName: Assets.Sounds.click)
         removeFire()
         
@@ -94,7 +94,7 @@ class MenuView: UIView {
         }
     }
     
-    internal func backToSelectGameMode() {
+    @objc internal func backToSelectGameMode() {
         AudioManager.shared.playSound(fileName: Assets.Sounds.click)
         addFire()
         
@@ -103,7 +103,7 @@ class MenuView: UIView {
         }
     }
     
-    internal func classicMode(){
+    @objc internal func classicMode(){
         AudioManager.shared.playSound(fileName: Assets.Sounds.click)
         removeFire()
         createLevelSelectMenu(gameMode: .classic)
@@ -329,7 +329,7 @@ class MenuView: UIView {
         addSubviews(subviews, to: settingsMenu!)
     }
     
-    internal func credits() {
+    @objc internal func credits() {
         AudioManager.shared.playSound(fileName: Assets.Sounds.click)
         createCreditsMenu()
         
@@ -338,7 +338,7 @@ class MenuView: UIView {
         }
     }
     
-    internal func fireMode() {
+    @objc internal func fireMode() {
         AudioManager.shared.playSound(fileName: Assets.Sounds.click)
         removeFire()
         createLevelSelectMenu(gameMode: .fire)
@@ -374,7 +374,7 @@ class MenuView: UIView {
         
     }
     
-    internal func newGame() {
+    @objc internal func newGame() {
         AudioManager.shared.playSound(fileName: Assets.Sounds.click)
         createGameModeMenu()
         
@@ -385,7 +385,7 @@ class MenuView: UIView {
         addFire()
     }
     
-    internal func openURL(sender: UIButton) {
+    @objc internal func openURL(sender: UIButton) {
         
         if let label = sender.titleLabel?.text {
             var urlString = ""
@@ -423,17 +423,17 @@ class MenuView: UIView {
         settingsMenu = nil
     }
     
-    internal func resumeGame() {
+    @objc internal func resumeGame() {
         AudioManager.shared.playSound(fileName: Assets.Sounds.click)
         delegate?.resumeGame()
     }
     
-    internal func selectLevel(button: LevelButton) {
+    @objc internal func selectLevel(button: LevelButton) {
         AudioManager.shared.playSound(fileName: Assets.Sounds.click)
         delegate?.newGame(gameMode: gameMode, level: button.level)
     }
     
-    internal func settings() {
+    @objc internal func settings() {
         AudioManager.shared.playSound(fileName: Assets.Sounds.click)
         createSettingsMenu()
         
@@ -473,7 +473,7 @@ class MenuView: UIView {
         )
     }
     
-    internal func toggleButton(sender: ToggleButton) {
+    @objc internal func toggleButton(sender: ToggleButton) {
         sender.active = !sender.active
         AudioManager.shared.playSound(fileName: Assets.Sounds.click)
     }
@@ -525,7 +525,7 @@ class MenuView: UIView {
         })
     }
 
-    internal func tutorial() {
+    @objc internal func tutorial() {
         delegate?.showTutorial()
     }
     

@@ -86,15 +86,15 @@ class GameOverView: UIView {
         super.init(coder: aDecoder)
     }
     
-    internal func playAgain() {
+    @objc internal func playAgain() {
         delegate?.playAgain()
     }
     
-    internal func quit() {
+    @objc internal func quit() {
         delegate?.quit()
     }
     
-    internal func onTap(sender: UITapGestureRecognizer) {
+    @objc internal func onTap(sender: UITapGestureRecognizer) {
         guard topScoreLabel.isHidden == false else {
             return
         }

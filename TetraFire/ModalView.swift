@@ -50,7 +50,7 @@ class ModalView: UIView{
         super.init(coder: aDecoder)
     }
     
-    func close() {
+    @objc func close() {
         hide()
     }
     

@@ -41,7 +41,7 @@ class LevelView: UILabel {
         super.init(coder: aDecoder)
     }
     
-    internal func onTimerShow() {
+    @objc internal func onTimerShow() {
         show { [weak self] success in
             guard let strongSelf = self else { return }
             strongSelf.timer = Timer.scheduledTimer(timeInterval: 0.75,
@@ -52,7 +52,7 @@ class LevelView: UILabel {
         }
     }
     
-    internal func onTimerHide() {
+    @objc internal func onTimerHide() {
         timer?.invalidate()
         hide()
     }

@@ -35,9 +35,7 @@ class UserData {
 
     var activePiece: PieceModel? {
         get {
-            guard let versionNumber = versionNumber,
-                versionNumber == Constants.currentVersion,
-                let data = UserDefaults.standard.object(forKey: constants.ActivePiece) as? Data else {
+            guard let data = UserDefaults.standard.object(forKey: constants.ActivePiece) as? Data else {
                 return nil
             }
             
@@ -75,9 +73,7 @@ class UserData {
     
     var gridModel: GridModel {
         get {
-            guard let versionNumber = versionNumber,
-            versionNumber == Constants.currentVersion,
-                let data = UserDefaults.standard.object(forKey: constants.GridModel) as? Data else {
+            guard let data = UserDefaults.standard.object(forKey: constants.GridModel) as? Data else {
                     clearData()
                     return GridModelFactory.emptyModel
             }
@@ -91,9 +87,7 @@ class UserData {
     
     var heldPiece: PieceModel? {
         get {
-            guard let versionNumber = versionNumber,
-                versionNumber == Constants.currentVersion,
-                let data = UserDefaults.standard.object(forKey: constants.HeldPiece) as? Data else {
+            guard let data = UserDefaults.standard.object(forKey: constants.HeldPiece) as? Data else {
                     return nil
             }
             
@@ -157,9 +151,7 @@ class UserData {
     
     var sidePanelModel: SidePanelModel {
         get {
-            guard let versionNumber = versionNumber,
-            versionNumber == Constants.currentVersion,
-                let data = UserDefaults.standard.object(forKey: constants.SidePanelModel) as? Data else {
+            guard let data = UserDefaults.standard.object(forKey: constants.SidePanelModel) as? Data else {
                     return SidePanelModel()
             }
             
