@@ -53,7 +53,7 @@ class PieceView: UIView {
     
     var pieceModel: PieceModel? {
         didSet {
-            guard var pieceModel = pieceModel, blockSize != .zero else {
+            guard let pieceModel = pieceModel, blockSize != .zero else {
                 return
             }
             

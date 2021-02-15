@@ -62,7 +62,7 @@ class TutorialViewController: GameViewController {
         button.titleLabel?.font = .menuButton
         button.sizeToFit()
         button.frame.origin = CGPoint(x: self.view.frame.width - button.frame.width - self.spacer, y: self.spacer)
-        button.addTarget(self, action: #selector(self.close), for: UIControlEvents.touchUpInside)
+        button.addTarget(self, action: #selector(self.close), for: UIControl.Event.touchUpInside)
         return button
         }()
     
@@ -102,6 +102,7 @@ class TutorialViewController: GameViewController {
     
     // MARK: - Methods
     override func addSubviews() {
+        
         view.addSubview(backgroundView)
         view.addSubview(flashView)
         view.addSubview(overlayView)
@@ -297,7 +298,12 @@ class TutorialViewController: GameViewController {
             self.activePiece = activePiece
 
             gridView.frame.origin.x = offset
-            gridView.frame.origin.y = sidePanelView.frame.origin.y
+            
+            let tutorialOffSet: CGFloat = -30 // to accomodate position of tutorialViewController (overlay)
+            gridView.frame.origin.y = sidePanelView.frame.origin.y + tutorialOffSet
+            sidePanelView.frame.origin.y = sidePanelView.frame.origin.y + tutorialOffSet
+            holdView.frame.origin.y = holdView.frame.origin.y + tutorialOffSet
+
             sidePanelModel.reset()
             sidePanelView.update()
             

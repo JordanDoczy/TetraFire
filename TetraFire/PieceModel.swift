@@ -8,7 +8,10 @@
 
 import Foundation
 
-class PieceModel: NSObject, NSCoding {
+class PieceModel: NSObject, NSCoding, NSSecureCoding {
+    
+    public class var supportsSecureCoding: Bool { return true }
+
     
     struct Constants {
         struct EncodeKeys {
@@ -61,10 +64,10 @@ class PieceModel: NSObject, NSCoding {
                 return nil
         }
         
-        let up = upRawValue.flatMap( { Utility.decodeGridPosition(gridPosition: $0) })
-        let down = downRawValue.flatMap( { Utility.decodeGridPosition(gridPosition: $0) })
-        let left = leftRawValue.flatMap( { Utility.decodeGridPosition(gridPosition: $0) })
-        let right = rightRawValue.flatMap( { Utility.decodeGridPosition(gridPosition: $0) })
+        let up = upRawValue.compactMap( { Utility.decodeGridPosition(gridPosition: $0) })
+        let down = downRawValue.compactMap( { Utility.decodeGridPosition(gridPosition: $0) })
+        let left = leftRawValue.compactMap( { Utility.decodeGridPosition(gridPosition: $0) })
+        let right = rightRawValue.compactMap( { Utility.decodeGridPosition(gridPosition: $0) })
         
         self.color = color
         self.up = up
@@ -151,6 +154,8 @@ class PieceModel: NSObject, NSCoding {
 }
 
 class JPiece: PieceModel {
+    override public class var supportsSecureCoding: Bool { return true }
+
     init() {
         super.init(color: .purple,
                    up:    [(row: 2, column: 0),
@@ -177,6 +182,8 @@ class JPiece: PieceModel {
 }
 
 class LPiece: PieceModel {
+    override public class var supportsSecureCoding: Bool { return true }
+    
     init() {
         super.init(color: .pink,
                    up:    [(row: 2, column: 1),
@@ -203,6 +210,8 @@ class LPiece: PieceModel {
 }
 
 class LinePiece: PieceModel {
+    override public class var supportsSecureCoding: Bool { return true }
+    
     init() {
         super.init(color: .red,
                    up:    [(row: 0, column: 0),
@@ -229,6 +238,8 @@ class LinePiece: PieceModel {
 }
 
 class SPiece: PieceModel {
+    override public class var supportsSecureCoding: Bool { return true }
+    
     init() {
         super.init(color: .green,
                    up:    [(row: 0, column: 0),
@@ -255,6 +266,8 @@ class SPiece: PieceModel {
 }
 
 class SquarePiece: PieceModel {
+    override public class var supportsSecureCoding: Bool { return true }
+    
     init() {
         super.init(color: .orange,
                    up:    [(row: 0, column: 0),
@@ -281,6 +294,8 @@ class SquarePiece: PieceModel {
 }
 
 class TPiece: PieceModel {
+    override public class var supportsSecureCoding: Bool { return true }
+    
     init() {
         super.init(color: .yellow,
                    up:    [(row: 0, column: 0),
@@ -307,6 +322,8 @@ class TPiece: PieceModel {
 }
 
 class ZPiece: PieceModel {
+    override public class var supportsSecureCoding: Bool { return true }
+    
     init() {
         super.init(color: .blue,
                    up:    [(row: 0, column: 1),

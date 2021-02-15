@@ -71,7 +71,7 @@ class TetraFireGridView: GridView, UIGridDataSource {
             }
         }
         
-        bringSubview(toFront: grid)
+        bringSubviewToFront(grid)
     }
     
     internal func putOutFire(timer: Timer) {

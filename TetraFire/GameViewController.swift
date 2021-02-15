@@ -35,7 +35,7 @@ class GameViewController: UIViewController, HUDViewDataSource {
     // MARK: - Member Vars
     internal var didSwap: Bool = false
     internal var gameState = GameState.gameOver
-    internal var longPressState: UIGestureRecognizerState = .ended
+    internal var longPressState: UIGestureRecognizer.State = .ended
     internal var panLocation: CGPoint?
     internal var scoreOffset: Int = 0
     internal var timerDropInterval = 0.015
@@ -52,7 +52,13 @@ class GameViewController: UIViewController, HUDViewDataSource {
     }
 
     internal var offset: CGFloat {
-        return (view.frame.height <= 480) ? 10 : 30
+        
+        switch (Int(view.frame.height)) {
+        case 0...480: return 10
+        case 481...736: return 30
+        case 737...: return 60
+        default: return 0
+        }
     }
     
     internal var particleScene: ParticleScene? {
@@ -185,7 +191,9 @@ class GameViewController: UIViewController, HUDViewDataSource {
         return true
     }
     
-    @IBAction func unwind(_ sender: UIStoryboardSegue){ }
+    @IBAction func unwind(_ sender: UIStoryboardSegue){
+        appeared()
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -242,6 +250,7 @@ class GameViewController: UIViewController, HUDViewDataSource {
         if UserData.shared.skipTutorial {
             showMenu()
             backgroundView.show()
+            particleView.presentScene(particleScene)
         } else {
             showTutorial()
         }
@@ -721,7 +730,7 @@ extension GameViewController: MenuViewDelegate {
         
         self.gameMode = gameMode
         self.level = level
-        score = gameMode == .classic ? 0 : -1
+        score = gameMode == .classic ? 0 : 0
         scoreOffset = GameViewController.pointsNeededForLevel(level: level)
         
         switch gameMode {
@@ -741,15 +750,15 @@ extension GameViewController: MenuViewDelegate {
     }
     
     internal func resumeGame() {
-         gameState = .inPlay
+        gameState = .inPlay
         
         menuView.hide()
         holdView.update()
         hudView.update()
         gridView.update()
         sidePanelView.update()
-        
-        startTimer(with: .update)
+
+        startGame()
     }
     
     internal func showTutorial() {

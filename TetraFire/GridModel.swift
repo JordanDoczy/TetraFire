@@ -8,8 +8,14 @@
 
 import UIKit
 
-class GridModel: NSObject, NSCoding, GridViewDataSource {
+class GridModel: NSObject, NSCoding, NSSecureCoding, GridViewDataSource {
     
+    static var supportsSecureCoding: Bool {
+        get{
+            return true
+        }
+    }
+
     struct Constants{
         struct EncodeKeys{
             static let blocks = "blocks"
@@ -154,7 +160,7 @@ class GridModel: NSObject, NSCoding, GridViewDataSource {
     }
     
     func getFirstNonEmptyIndex() -> Int? {
-        return blocks.index { !isEmptyElement($0) }
+        return blocks.firstIndex { !isEmptyElement($0) }
     }
     
     func getHighestOpenPosition(positions: [GridPosition]) -> [GridPosition] {

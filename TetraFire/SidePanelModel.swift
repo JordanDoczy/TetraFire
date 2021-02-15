@@ -16,8 +16,14 @@ extension Constants {
     }
 }
 
-class SidePanelModel: NSObject, NSCoding {
+class SidePanelModel: NSObject, NSCoding, NSSecureCoding {
 
+    static var supportsSecureCoding: Bool {
+        get{
+            return true
+        }
+    }
+    
     fileprivate(set) var pieces = [PieceModel]()
     
     override init() {

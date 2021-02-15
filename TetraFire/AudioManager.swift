@@ -88,7 +88,9 @@ class AudioManager: NSObject{
                 audioPlayer.prepareToPlay()
                 players[fileName] = audioPlayer
                 playAudio(fileName: fileName, loop: loop, fadeIn: fadeIn)
-            } catch {}
+            } catch let error {
+                print(error)
+            }
         }
     }
     

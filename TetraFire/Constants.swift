@@ -9,7 +9,7 @@
 import UIKit
 
 struct Constants {
-    static let currentVersion = "1.4"
+    static let currentVersion = "1.5"
     static let rows = 20
     static let columns = 10
     static let maxLevelFireMode = 15

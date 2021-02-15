@@ -10,21 +10,21 @@ import Foundation
 
 extension Constants {
     struct UserData {
-        static let ActivePiece           = "ActivePiece"
-        static let BackgroundMusicOff    = "BackgroundMusicOff"
-        static let GameMode              = "GameMode"
-        static let GridModel             = "GridModel"
-        static let HeldPiece             = "HeldPiece"
-        static let HighestLevelClassicMode      = "HighestLevelClassicMode"
-        static let HighestLevelFireMode         = "HighestLevelFireMode"
-        static let Level                 = "Level"
-        static let Score                 = "Score"
-        static let SidePanelModel        = "SidePanelModel"
-        static let SoundEffectsOff       = "SoundEffectsOff"
-        static let SkipTutorial          = "SkipTutorial"
-        static let TopScore              = "TopScore"
-        static let VersionNumber         = "VersionNumber"
-        static let VibrateOff            = "VibrateOff"
+        static let ActivePiece             = "ActivePiece"
+        static let BackgroundMusicOff      = "BackgroundMusicOff"
+        static let GameMode                = "GameMode"
+        static let GridModel               = "GridModel"
+        static let HeldPiece               = "HeldPiece"
+        static let HighestLevelClassicMode = "HighestLevelClassicMode"
+        static let HighestLevelFireMode    = "HighestLevelFireMode"
+        static let Level                   = "Level"
+        static let Score                   = "Score"
+        static let SidePanelModel          = "SidePanelModel"
+        static let SoundEffectsOff         = "SoundEffectsOff"
+        static let SkipTutorial            = "SkipTutorial"
+        static let TopScore                = "TopScore"
+        static let VersionNumber           = "VersionNumber"
+        static let VibrateOff              = "VibrateOff"
     }
 }
 
@@ -39,7 +39,13 @@ class UserData {
                 return nil
             }
             
-            return NSKeyedUnarchiver.unarchiveObject(with: data) as? PieceModel ?? nil
+            do {
+                let model = try NSKeyedUnarchiver.unarchivedObject(ofClasses: [PieceModel.self, NSNull.self, NSArray.self], from: data)
+                return model as? PieceModel ?? nil
+            } catch let error {
+                print (error)
+                return nil
+            }
         }
         set {
             guard let newValue = newValue else {
@@ -47,8 +53,12 @@ class UserData {
                 return
             }
             
-            UserDefaults.standard.set(NSKeyedArchiver.archivedData(withRootObject: newValue),
-                                      forKey: constants.ActivePiece)
+            do {
+                let archive = try NSKeyedArchiver.archivedData(withRootObject: newValue, requiringSecureCoding: false)
+                UserDefaults.standard.set(archive, forKey: constants.ActivePiece)
+            } catch {
+                // fail quietly
+            }
         }
     }
     
@@ -78,20 +88,39 @@ class UserData {
                     return GridModelFactory.emptyModel
             }
             
-            return NSKeyedUnarchiver.unarchiveObject(with: data) as? GridModel ?? GridModelFactory.emptyModel
+            do {
+                let archive = try NSKeyedUnarchiver.unarchivedObject(ofClasses: [GridModel.self, NSArray.self, NSNull.self], from: data)
+                return archive as? GridModel ?? GridModelFactory.emptyModel
+            } catch let error {
+                print(error)
+                return GridModelFactory.emptyModel
+            }
         }
         set {
-            UserDefaults.standard.set(NSKeyedArchiver.archivedData(withRootObject: newValue), forKey: constants.GridModel)
+            
+            do {
+                let archive = try NSKeyedArchiver.archivedData(withRootObject: newValue, requiringSecureCoding: false)
+                UserDefaults.standard.set(archive, forKey: constants.GridModel)
+            } catch let error {
+                print(error)
+                // fail quietly
+            }
         }
     }
-    
+ 
     var heldPiece: PieceModel? {
         get {
             guard let data = UserDefaults.standard.object(forKey: constants.HeldPiece) as? Data else {
                     return nil
             }
             
-            return NSKeyedUnarchiver.unarchiveObject(with: data) as? PieceModel ?? nil
+            do {
+                let model = try NSKeyedUnarchiver.unarchivedObject(ofClasses: [PieceModel.self, NSNull.self, NSArray.self], from: data)
+                return model as? PieceModel ?? nil
+            } catch let error {
+                print(error)
+                return nil
+            }
         }
         set {
             guard let newValue = newValue else {
@@ -99,8 +128,12 @@ class UserData {
                 return
             }
             
-            UserDefaults.standard.set(NSKeyedArchiver.archivedData(withRootObject: newValue),
-                                      forKey: constants.HeldPiece)
+            do {
+                let archive = try NSKeyedArchiver.archivedData(withRootObject: newValue, requiringSecureCoding: false)
+                UserDefaults.standard.set(archive, forKey: constants.HeldPiece)
+            } catch {
+                // fail quietly
+            }
         }
     }
     
@@ -154,11 +187,21 @@ class UserData {
             guard let data = UserDefaults.standard.object(forKey: constants.SidePanelModel) as? Data else {
                     return SidePanelModel()
             }
-            
-            return NSKeyedUnarchiver.unarchiveObject(with: data) as? SidePanelModel ?? SidePanelModel()
+            do {
+                let model = try NSKeyedUnarchiver.unarchivedObject(ofClass: SidePanelModel.self, from: data)
+                return model ?? SidePanelModel()
+            } catch {
+                return SidePanelModel()
+            }
         }
         set {
-            UserDefaults.standard.set(NSKeyedArchiver.archivedData(withRootObject: newValue), forKey: constants.SidePanelModel)
+            
+            do {
+                let archive = try NSKeyedArchiver.archivedData(withRootObject: newValue, requiringSecureCoding: false)
+                UserDefaults.standard.set(archive, forKey: constants.SidePanelModel)
+            } catch {
+                // fail quietly
+            }
         }
     }
     

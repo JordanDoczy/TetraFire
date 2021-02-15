@@ -26,7 +26,13 @@ class HUDView: UIView {
     fileprivate var score: NumericLabel?
     fileprivate var menuLabel: UILabel?
     
-    fileprivate let spacer: CGFloat = 10
+    internal var spacer: CGFloat {
+        
+        switch (Int(frame.height)) {
+        case 0...480: return 10
+        default: return 20
+        }
+    }
     
     override required init(frame: CGRect) {
         super.init(frame: frame)
@@ -37,7 +43,7 @@ class HUDView: UIView {
         score.label = Strings.score
         self.score = score
 
-        let level = NumericLabel(frame: CGRect(x: spacer, y: score.height + spacer*2, width: 0, height: 0))
+        let level = NumericLabel(frame: CGRect(x: spacer, y: score.height + score.frame.minY + spacer/2, width: 0, height: 0))
         level.label = Strings.level
         self.level = level
         
@@ -69,19 +75,22 @@ class HUDView: UIView {
     override func draw(_ rect: CGRect) {
         let path = UIBezierPath()
         
+        let yMin: CGFloat = 25 + spacer
+        let yMax: CGFloat = 50 + spacer
+        
         let point0 = CGPoint.zero
-        let point1 = CGPoint(x: 0, y: 50)
-        let point2 = CGPoint(x: (3 / 11)  * frame.width, y: 50)
-        let point3 = CGPoint(x: (4 / 11)  * frame.width, y: 25)
-        let point4 = CGPoint(x: (7 / 11)  * frame.width, y: 25)
-        let point5 = CGPoint(x: (8 / 11)  * frame.width, y: 50)
-        let point6 = CGPoint(x: (11 / 11) * frame.width, y: 50)
+        let point1 = CGPoint(x: 0, y: yMax)
+        let point2 = CGPoint(x: (3 / 11)  * frame.width, y: yMax)
+        let point3 = CGPoint(x: (4 / 11)  * frame.width, y: yMin)
+        let point4 = CGPoint(x: (7 / 11)  * frame.width, y: yMin)
+        let point5 = CGPoint(x: (8 / 11)  * frame.width, y: yMax)
+        let point6 = CGPoint(x: (11 / 11) * frame.width, y: yMax)
         let point7 = CGPoint(x: (11 / 11) * frame.width, y: 0)
 
-        let controlPoint1 = CGPoint(x: (3.5 / 11) * frame.width, y: 50)
-        let controlPoint2 = CGPoint(x: (3.5 / 11) * frame.width, y: 25)
-        let controlPoint3 = CGPoint(x: (7.5 / 11) * frame.width, y: 25)
-        let controlPoint4 = CGPoint(x: (7.5 / 11) * frame.width, y: 50)
+        let controlPoint1 = CGPoint(x: (3.5 / 11) * frame.width, y: yMax)
+        let controlPoint2 = CGPoint(x: (3.5 / 11) * frame.width, y: yMin)
+        let controlPoint3 = CGPoint(x: (7.5 / 11) * frame.width, y: yMin)
+        let controlPoint4 = CGPoint(x: (7.5 / 11) * frame.width, y: yMax)
         
         
         path.move(to: .zero)

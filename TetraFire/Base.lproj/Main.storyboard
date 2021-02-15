@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16G29" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
-    <device id="retina4_7" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -23,33 +21,35 @@
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <connections>
-                        <segue destination="Ubh-rI-UBb" kind="show" identifier="showTutorialSegue" animates="NO" id="IuM-d8-YO4"/>
+                        <segue destination="2KQ-2O-LqJ" kind="show" identifier="showTutorialSegue" id="r5c-Oe-8aG"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="-169" y="87"/>
         </scene>
         <!--Tutorial View Controller-->
-        <scene sceneID="tyB-dG-Sv3">
+        <scene sceneID="JdA-NP-PCM">
             <objects>
-                <viewController id="Ubh-rI-UBb" customClass="TutorialViewController" customModule="TetraFire" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="2KQ-2O-LqJ" customClass="TutorialViewController" customModule="TetraFire" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="E5X-vf-Qil"/>
-                        <viewControllerLayoutGuide type="bottom" id="gP0-8e-CtI"/>
+                        <viewControllerLayoutGuide type="top" id="o5H-YC-oQ2"/>
+                        <viewControllerLayoutGuide type="bottom" id="nvj-f8-xXV"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="w0G-Oh-Y31">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                    <view key="view" contentMode="scaleToFill" id="VHT-A5-8M8">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </view>
+                    <navigationItem key="navigationItem" id="svT-oB-sDU"/>
                     <connections>
-                        <segue destination="QHg-1f-cW0" kind="unwind" identifier="unwindToGameSegue" animates="NO" unwindAction="unwind:" id="C20-q7-LQR"/>
+                        <segue destination="Cnb-ba-Us6" kind="unwind" identifier="unwindToGameSegue" unwindAction="unwind:" id="Nuk-8P-ypf"/>
                     </connections>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="brn-iD-H0v" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <exit id="QHg-1f-cW0" userLabel="Exit" sceneMemberID="exit"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="HVv-rB-vzH" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <exit id="Cnb-ba-Us6" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="871" y="87"/>
+            <point key="canvasLocation" x="748" y="87"/>
         </scene>
     </scenes>
 </document>

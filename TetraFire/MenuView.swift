@@ -49,7 +49,7 @@ class MenuView: UIView {
     fileprivate var particleScene: ParticleScene! {
         return (UIApplication.shared.delegate as? AppDelegate)?.particleScene
     }
-    fileprivate let spacer: CGFloat = 20.0
+    fileprivate let spacer: CGFloat = 25.0
     
     fileprivate var classicLevelCount = 0
     fileprivate var fireLevelCount = 0
@@ -129,7 +129,7 @@ class MenuView: UIView {
         
         backButton = createButton(title: Strings.back, selector: #selector(backToMainMenu))
         backButton!.contentHorizontalAlignment = .left
-        backButton!.frame.origin = CGPoint(x: spacer / 2, y: spacer / 4)
+        backButton!.frame.origin = CGPoint(x: spacer, y: spacer / 2)
         creditsMenu!.addSubview(backButton!)
 
         var subviews = [UIView]()
@@ -240,7 +240,7 @@ class MenuView: UIView {
                 delay: 0.2 + Double(index) * 0.015,
                 usingSpringWithDamping: 0.65,
                 initialSpringVelocity: 1.5,
-                options: UIViewAnimationOptions(),
+                options: UIView.AnimationOptions(),
                 animations: {
                     levelButton.alpha = 1
                     levelButton.transform = .identity
@@ -266,7 +266,7 @@ class MenuView: UIView {
         label.text = Strings.menu
         subviews.append(label)
         
-        if let dataSource = dataSource{
+        if let dataSource = dataSource {
             if dataSource.canResumeGame {
                 resumeGameButton = createButton(title: Strings.resumeGame, selector: #selector(resumeGame))
                 subviews.append(resumeGameButton!)
@@ -398,7 +398,7 @@ class MenuView: UIView {
             }
             
             if let url = URL(string: urlString) {
-                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                UIApplication.shared.open(url, options: convertToUIApplicationOpenExternalURLOptionsKeyDictionary([:]), completionHandler: nil)
             }
         }
     }
@@ -458,7 +458,7 @@ class MenuView: UIView {
                        delay: 0,
                        usingSpringWithDamping: 0.65,
                        initialSpringVelocity: 1.5,
-                       options: UIViewAnimationOptions(),
+                       options: UIView.AnimationOptions(),
             animations: { [weak self] in
                 self?.transform = .identity
             }, completion: { [weak self] success in
@@ -498,7 +498,7 @@ class MenuView: UIView {
             delay: 0,
             usingSpringWithDamping: 0.65,
             initialSpringVelocity: 1.5,
-            options: UIViewAnimationOptions(),
+            options: UIView.AnimationOptions(),
             animations: {
                 toView.transform = .identity
                 fromView.alpha = 0
@@ -514,7 +514,7 @@ class MenuView: UIView {
         toView.alpha = 0
         UIView.animate(withDuration: 0.5,
             delay: 0,
-            options: UIViewAnimationOptions(),
+            options: UIView.AnimationOptions(),
             animations: {
                 fromView.alpha = 0
                 toView.alpha = 1
@@ -658,3 +658,8 @@ class MenuView: UIView {
     }
 }
 
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToUIApplicationOpenExternalURLOptionsKeyDictionary(_ input: [String: Any]) -> [UIApplication.OpenExternalURLOptionsKey: Any] {
+	return Dictionary(uniqueKeysWithValues: input.map { key, value in (UIApplication.OpenExternalURLOptionsKey(rawValue: key), value)})
+}
