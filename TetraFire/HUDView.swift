@@ -30,7 +30,7 @@ class HUDView: UIView {
         
         switch (Int(frame.height)) {
         case 0...480: return 10
-        default: return 20
+        default: return 30
         }
     }
     
@@ -39,7 +39,7 @@ class HUDView: UIView {
         
         isOpaque = false
 
-        let score = NumericLabel(frame: CGRect(x: spacer, y: spacer, width: 0, height: 0))
+        let score = NumericLabel(frame: CGRect(x: spacer, y: spacer*1.5, width: 0, height: 0))
         score.label = Strings.score
         self.score = score
 
@@ -76,7 +76,7 @@ class HUDView: UIView {
         let path = UIBezierPath()
         
         let yMin: CGFloat = 25 + spacer
-        let yMax: CGFloat = 50 + spacer
+        let yMax: CGFloat = 50 + spacer*1.5
         
         let point0 = CGPoint.zero
         let point1 = CGPoint(x: 0, y: yMax)
