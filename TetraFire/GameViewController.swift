@@ -41,6 +41,7 @@ class GameViewController: UIViewController, HUDViewDataSource {
     internal var timerDropInterval = 0.015
     internal var timerHoldInterval = 0.1
     internal var timerState = TimerState.update
+    internal var previousTime = 0.000
 
     // MARK: - Computed Vars
     internal var boxWidth: CGFloat {
@@ -163,6 +164,8 @@ class GameViewController: UIViewController, HUDViewDataSource {
     
     internal lazy var particleView: SKView = { [unowned self] in
         let particleView = SKView()
+        particleView.showsFPS = true
+        particleView.showsNodeCount = true
         particleView.frame.origin = .zero
         particleView.isUserInteractionEnabled = false
         particleView.ignoresSiblingOrder = true
@@ -205,12 +208,13 @@ class GameViewController: UIViewController, HUDViewDataSource {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        backgroundView.startAnimating()
+//        backgroundView.startAnimating()
         particleView.presentScene(particleScene)
+        particleScene?.delegate = self
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        backgroundView.stopAnimating()
+//        backgroundView.stopAnimating()
         particleScene?.removeAllChildren()
         particleScene?.removeAllActions()
         super.viewWillDisappear(animated)
@@ -232,7 +236,7 @@ class GameViewController: UIViewController, HUDViewDataSource {
     }
     
     internal func addSubviews() {
-        view.addSubview(backgroundView)
+//        view.addSubview(backgroundView)
         view.addSubview(flashView)
         view.addSubview(overlayView)
         view.addSubview(gridView)
@@ -249,7 +253,7 @@ class GameViewController: UIViewController, HUDViewDataSource {
     internal func appeared() {
         if UserData.shared.skipTutorial {
             showMenu()
-            backgroundView.show()
+//            backgroundView.show()
             particleView.presentScene(particleScene)
         } else {
             showTutorial()
@@ -345,7 +349,7 @@ class GameViewController: UIViewController, HUDViewDataSource {
         reset()
         particleScene?.removeAllChildren()
         holdView.update()
-        stopTimer()
+        timerState = .pause
         
         gridView.hide()
         sidePanelView.hide()
@@ -380,7 +384,7 @@ class GameViewController: UIViewController, HUDViewDataSource {
             activePiece.gridPosition = gridPosition
             updateGridModelWithActivePiece(activePiece: activePiece)
         } else {
-            startTimer(with: .hold)
+            timerState = .hold
         }
     }
     
@@ -413,7 +417,7 @@ class GameViewController: UIViewController, HUDViewDataSource {
         hudView.isHidden = true
         holdView.isHidden = true
         
-        stopTimer()
+        timerState = .pause
         saveState()
     }
     
@@ -470,8 +474,7 @@ class GameViewController: UIViewController, HUDViewDataSource {
                 
         AudioManager.shared.playSound(fileName: Assets.Sounds.thud)
         didSwap = false
-        
-        stopTimer()
+
         timerState = .update
         
         let completedRows = gridModel.getCompletedRows()
@@ -490,7 +493,6 @@ class GameViewController: UIViewController, HUDViewDataSource {
             }
         } else {
             nextPiece()
-            resumeTimer()
         }
         
         _ = didIncreaseLevel()
@@ -507,7 +509,7 @@ class GameViewController: UIViewController, HUDViewDataSource {
     }
     
     fileprivate func startGame() {
-        startTimer(with: .update)
+        timerState = .update
     }
     
     fileprivate func updateGridModelWithActivePiece(activePiece: PieceModel) {
@@ -516,7 +518,6 @@ class GameViewController: UIViewController, HUDViewDataSource {
         }
         
         if timerState == .hold {
-            stopTimer()
             timerState = .update
         }
         
@@ -536,43 +537,6 @@ class GameViewController: UIViewController, HUDViewDataSource {
         
         gridView.update()
     }
-
-    // MARK: - Timer Methods
-    fileprivate func resumeTimer() {
-        if particleScene?.action(forKey: constants.timerActionKey) == nil {
-            startTimer(with: timerState)
-        }
-    }
-    
-    internal func startTimer(with timerState: TimerState) {
-        stopTimer()
-        
-        switch(timerState) {
-        case .drop:
-            let delay = SKAction.wait(forDuration: timerDropInterval)
-            let selector = SKAction.perform(#selector(incrementRow), onTarget: self)
-            let sequenceAction = SKAction.sequence([delay, selector])
-            let repeatAction = SKAction.repeatForever(sequenceAction)
-            particleScene?.run(repeatAction, withKey: constants.timerActionKey)
-        case .hold:
-            let delay = SKAction.wait(forDuration: timerHoldInterval)
-            let selector = SKAction.perform(#selector(setPiece), onTarget: self)
-            let sequenceAction = SKAction.sequence([delay, selector])
-            particleScene?.run(sequenceAction, withKey: constants.timerActionKey)
-        case .update:
-            let delay = SKAction.wait(forDuration: timerUpdateInterval)
-            let selector = SKAction.perform(#selector(incrementRow), onTarget: self)
-            let sequenceAction = SKAction.sequence([delay, selector])
-            let repeatAction = SKAction.repeatForever(sequenceAction)
-            particleScene?.run(repeatAction, withKey: constants.timerActionKey)
-        }
-        
-        self.timerState = timerState
-    }
-    
-    internal func stopTimer() {
-        particleScene?.removeAction(forKey: constants.timerActionKey)
-    }
     
     // MARK: - Gesture Recognizers
     @objc internal func onLongPress(sender: UILongPressGestureRecognizer) {
@@ -582,10 +546,10 @@ class GameViewController: UIViewController, HUDViewDataSource {
 
         switch(sender.state) {
         case .began:
-            startTimer(with: .drop)
+            timerState = .drop
             longPressState = .began
         case .ended:
-            startTimer(with: .update)
+            timerState = .update
             longPressState = .ended
         default:
             longPressState = .ended
@@ -682,8 +646,6 @@ extension GameViewController: GridViewDataSource {
 
 extension GameViewController: GridViewDelegate {
     @objc internal func gridViewDidUpdate(gridView: GridView) {
-        resumeTimer()
-        
         if gameState == .setPiece {
             nextPiece()
         }
@@ -783,5 +745,33 @@ extension GameViewController: MenuViewDataSource {
 extension GameViewController: SidePanelDataSource {
     internal func getPieceQueue() -> [PieceModel] {
         return sidePanelModel.pieces
+    }
+}
+
+extension GameViewController: SKSceneDelegate {
+    func update(_ currentTime: TimeInterval, for scene: SKScene) {
+        
+        if previousTime == 0 { previousTime = currentTime }
+
+        switch(timerState) {
+        case .drop:
+            if currentTime - previousTime > timerDropInterval {
+                incrementRow()
+                previousTime = currentTime
+            }
+        case .hold:
+            if currentTime - previousTime > timerHoldInterval {
+                setPiece()
+                previousTime = currentTime
+            }
+        case .update:
+            if currentTime - previousTime > timerUpdateInterval {
+                incrementRow()
+                previousTime = currentTime
+            }
+        case .pause:
+            break
+        }
+        
     }
 }

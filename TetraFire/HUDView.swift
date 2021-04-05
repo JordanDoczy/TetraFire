@@ -57,7 +57,7 @@ class HUDView: UIView {
         
         let clearButton = UIButton()
         clearButton.frame.size = CGSize(width: 100, height: 75)
-        clearButton.frame.origin = CGPoint(x:frame.width - 100, y:0)
+        clearButton.frame.origin = menuLabel.frame.origin
         clearButton.addTarget(self, action: #selector(pauseGame), for: .touchUpInside)
         
         addSubview(menuLabel)

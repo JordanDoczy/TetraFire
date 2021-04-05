@@ -151,4 +151,5 @@ enum TimerState: Int {
     case update
     case drop
     case hold
+    case pause
 }

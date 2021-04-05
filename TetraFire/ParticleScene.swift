@@ -13,7 +13,7 @@ class ParticleScene: SKScene {
     
     fileprivate(set) var actions = [String : SKAction]()
     fileprivate(set) var effects = [String : SKEmitterNode]()
-    
+
     override required init(size: CGSize) {
         super.init(size: size)
         backgroundColor = SKColor.clear
@@ -66,22 +66,24 @@ class ParticleScene: SKScene {
             effects[key] = SKEmitterNode(fileNamed: effect.fileName)
             effects[key]?.particlePosition = position
             
-            removeAction(forKey: key)
-            actions[key] = SKAction.wait(forDuration: delay)
-            
-            run(actions[key]!) { [weak self] in
-                guard let strongSelf = self else { return }
+            if duration >= 0 {
+                removeAction(forKey: key)
+                actions[key] = SKAction.wait(forDuration: delay)
                 
-                if let skNode = strongSelf.effects[key] {
-                    skNode.resetSimulation()
-                    strongSelf.addChild(skNode)
+                run(actions[key]!) { [weak self] in
+                    guard let strongSelf = self else { return }
+                    
+                    if let skNode = strongSelf.effects[key] {
+                        skNode.resetSimulation()
+                        strongSelf.addChild(skNode)
+                    }
+                    
+                    strongSelf.removeAction(forKey: key)
                 }
                 
-                strongSelf.removeAction(forKey: key)
-            }
-            
-            if duration >= 0 {
                 removeEffect(forKey: key, delay: duration + delay)
+            } else {
+                addChild(effects[key]!)
             }
             
             return effects[key]

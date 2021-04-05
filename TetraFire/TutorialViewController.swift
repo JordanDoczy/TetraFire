@@ -359,25 +359,6 @@ class TutorialViewController: GameViewController {
     }
     
     internal override func didIncreaseLevel() -> Bool { return false }
-    
-    internal override func startTimer(with timerState: TimerState) {
-        stopTimer()
-        
-        switch(timerState) {
-        case .drop:
-            let delay = SKAction.wait(forDuration: timerDropInterval)
-            let selector = SKAction.perform(#selector(incrementRow), onTarget: self)
-            let sequenceAction = SKAction.sequence([delay, selector])
-            let repeatAction = SKAction.repeatForever(sequenceAction)
-            particleScene?.run(repeatAction, withKey: constants.timerActionKey)
-        case .hold:
-            setPiece()
-        default:
-            break
-        }
-        
-        self.timerState = timerState
-    }
 
     @objc internal func showModal() {
         modalOverlayView.show()
