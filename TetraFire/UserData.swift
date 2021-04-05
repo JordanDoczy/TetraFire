@@ -151,7 +151,6 @@ class UserData {
     
     var highestLevelFireMode: Int {
         get {
-            return 15 // TODO: remove
             let value = UserDefaults.standard.integer(forKey: constants.HighestLevelFireMode)
             return value > 0 ? value : 1
         }

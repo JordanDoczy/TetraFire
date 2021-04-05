@@ -129,6 +129,7 @@ class TutorialViewController: GameViewController {
         
         tutorial = 0
         backgroundView.show()
+        particleScene?.delegate = self
     }
     
     @objc internal func back() {
@@ -419,5 +420,30 @@ extension TutorialViewController: ModalViewDelegate {
         infoLabel.hide()
         sidePanelView.hide()
         holdView.hide()
+    }
+}
+
+extension TutorialViewController {
+    override func update(_ currentTime: TimeInterval, for scene: SKScene) {
+        
+        if previousTime == 0 { previousTime = currentTime }
+
+        switch(timerState) {
+        case .drop:
+            if currentTime - previousTime > timerDropInterval {
+                incrementRow()
+                previousTime = currentTime
+            }
+        case .hold:
+            if currentTime - previousTime > timerHoldInterval {
+                setPiece()
+                previousTime = currentTime
+            }
+        case .update:
+            break
+        case .pause:
+            break
+        }
+        
     }
 }

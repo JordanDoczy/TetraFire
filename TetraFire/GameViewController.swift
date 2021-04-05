@@ -65,11 +65,11 @@ class GameViewController: UIViewController, HUDViewDataSource {
     internal var particleScene: ParticleScene? {
         return (UIApplication.shared.delegate as? AppDelegate)?.particleScene
     }
-    
+
     internal var timerUpdateInterval: TimeInterval {
         switch gameMode {
         case .classic:
-            return Constants.slowestSpeed - ((Constants.slowestSpeed - Constants.fastestSpeed) / Double(Constants.maxLevelClassicMode - 1) * Double(level - 1))
+            return Constants.slowestSpeed - (Double(level-1) * (Double(Constants.slowestSpeed - Constants.fastestSpeed) / Double(Constants.maxLevelClassicMode-1)))
         case .fire:
             return Constants.slowestSpeed
         }
@@ -164,8 +164,6 @@ class GameViewController: UIViewController, HUDViewDataSource {
     
     internal lazy var particleView: SKView = { [unowned self] in
         let particleView = SKView()
-        particleView.showsFPS = true
-        particleView.showsNodeCount = true
         particleView.frame.origin = .zero
         particleView.isUserInteractionEnabled = false
         particleView.ignoresSiblingOrder = true
@@ -208,13 +206,12 @@ class GameViewController: UIViewController, HUDViewDataSource {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-//        backgroundView.startAnimating()
+        backgroundView.startAnimating()
         particleView.presentScene(particleScene)
-        particleScene?.delegate = self
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-//        backgroundView.stopAnimating()
+        backgroundView.stopAnimating()
         particleScene?.removeAllChildren()
         particleScene?.removeAllActions()
         super.viewWillDisappear(animated)
@@ -236,7 +233,7 @@ class GameViewController: UIViewController, HUDViewDataSource {
     }
     
     internal func addSubviews() {
-//        view.addSubview(backgroundView)
+        view.addSubview(backgroundView)
         view.addSubview(flashView)
         view.addSubview(overlayView)
         view.addSubview(gridView)
@@ -253,7 +250,7 @@ class GameViewController: UIViewController, HUDViewDataSource {
     internal func appeared() {
         if UserData.shared.skipTutorial {
             showMenu()
-//            backgroundView.show()
+            backgroundView.show()
             particleView.presentScene(particleScene)
         } else {
             showTutorial()
@@ -509,6 +506,7 @@ class GameViewController: UIViewController, HUDViewDataSource {
     }
     
     fileprivate func startGame() {
+        particleScene?.delegate = self
         timerState = .update
     }
     
