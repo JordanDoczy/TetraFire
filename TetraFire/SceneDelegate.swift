@@ -32,4 +32,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
     }
 
+    func sceneDidEnterBackground(_ scene: UIScene) {
+        AudioManager.shared.pause()
+    }
+
+    func sceneWillEnterForeground(_ scene: UIScene) {
+        AudioManager.shared.resume()
+    }
+
 }

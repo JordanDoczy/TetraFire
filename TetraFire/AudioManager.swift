@@ -95,16 +95,48 @@ class AudioManager: NSObject{
         if UserData.shared.backgroundMusic {
             
             if musicTask == nil {
-                musicTask = Task { [weak self, interval] in
-                    while (try? await Task.sleep(for: interval)) != nil {
-                        self?.changeMusic()
-                    }
-                }
+                startTrackChanger()
                 changeMusic()
             }
         } else {
             stopBackgroundMusic()
         }
+    }
+
+    internal func startTrackChanger() {
+        musicTask = Task { [weak self, interval] in
+            while (try? await Task.sleep(for: interval)) != nil {
+                self?.changeMusic()
+            }
+        }
+    }
+
+    // Called when the app goes to the background. Music pauses so the track picks up
+    // where it left off.
+    func pause() {
+        musicTask?.cancel()
+        musicTask = nil
+        for task in fadeTasks.values {
+            task.cancel()
+        }
+        fadeTasks.removeAll()
+        for (fileName, player) in players where player.isPlaying {
+            // Sound effects stop so they don't resume mid-sound the next time they play.
+            Assets.Sounds.bgm.contains(fileName) ? player.pause() : player.stop()
+        }
+    }
+
+    func resume() {
+        guard UserData.shared.backgroundMusic, !UserData.shared.needsSoundChoice, musicTask == nil else { return }
+        guard 0 ..< Assets.Sounds.bgm.count ~= backgroundMusicIndex,
+              let player = players[Assets.Sounds.bgm[backgroundMusicIndex]] else {
+            playBackgroundMusic()
+            return
+        }
+        // A fade may have been cut off by pause().
+        player.volume = 1
+        player.play()
+        startTrackChanger()
     }
     
     func playSound(fileName: String){

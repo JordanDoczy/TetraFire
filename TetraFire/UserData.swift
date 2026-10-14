@@ -20,6 +20,7 @@ extension Constants {
         static let Level                   = "Level"
         static let Score                   = "Score"
         static let SidePanelModel          = "SidePanelModel"
+        static let SoundChoiceMade         = "SoundChoiceMade"
         static let SoundEffectsOff         = "SoundEffectsOff"
         static let SkipTutorial            = "SkipTutorial"
         static let TopScore                = "TopScore"
@@ -150,6 +151,27 @@ class UserData {
         }
     }
     
+    var soundChoiceMade: Bool {
+        get {
+            return defaults.bool(forKey: constants.SoundChoiceMade)
+        }
+        set {
+            defaults.set(newValue, forKey: constants.SoundChoiceMade)
+        }
+    }
+
+    // New players pick sound on or off on the welcome screen before any music plays.
+    // Anyone who already finished or skipped the tutorial (including 1.5 players) isn't asked.
+    var needsSoundChoice: Bool {
+        return !soundChoiceMade && !skipTutorial
+    }
+
+    func chooseSound(_ on: Bool) {
+        backgroundMusic = on
+        soundEffects = on
+        soundChoiceMade = true
+    }
+
     var skipTutorial: Bool {
         get {
             return defaults.bool(forKey: constants.SkipTutorial)

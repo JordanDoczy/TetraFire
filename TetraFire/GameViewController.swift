@@ -202,7 +202,9 @@ class GameViewController: UIViewController, HUDViewDataSource {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        AudioManager.shared.playBackgroundMusic()
+        if !UserData.shared.needsSoundChoice {
+            AudioManager.shared.playBackgroundMusic()
+        }
         
         addGestures()
     }

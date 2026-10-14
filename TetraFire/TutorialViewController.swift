@@ -34,6 +34,10 @@ class TutorialViewController: GameViewController {
                 tutorial = 0
             }
             tutorial == 0 ? backButton.hide() : backButton.show()
+            if tutorial == 0 && UserData.shared.needsSoundChoice {
+                modalView.dismissesOnTap = false
+                soundButtons.show()
+            }
             if tutorial < modalModel.count {
                 modalView.message = modalModel[tutorial]
                 modalView.show()
@@ -66,6 +70,29 @@ class TutorialViewController: GameViewController {
         return button
         }()
     
+    // Sound on / off choice, shown on the welcome screen the first time the app runs.
+    fileprivate lazy var soundButtons: UIStackView = { [unowned self] in
+        let on = UIButton()
+        on.setTitle(Strings.soundOn, for: .normal)
+        on.addTarget(self, action: #selector(self.chooseSoundOn), for: .touchUpInside)
+
+        let off = UIButton()
+        off.setTitle(Strings.soundOff, for: .normal)
+        off.addTarget(self, action: #selector(self.chooseSoundOff), for: .touchUpInside)
+
+        let stack = UIStackView(arrangedSubviews: [on, off])
+        for button in [on, off] {
+            button.setTitleColor(.text, for: .normal)
+            button.titleLabel?.font = .menuButton
+        }
+        stack.axis = .horizontal
+        stack.spacing = self.spacer * 4
+        stack.frame.size = stack.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
+        stack.center = CGPoint(x: self.view.bounds.midX, y: self.safeFrame.minY + self.safeFrame.height * 0.62)
+        stack.isHidden = true
+        return stack
+    }()
+
     fileprivate lazy var modalView: ModalView = { [unowned self] in
         let modal = ModalView(frame: self.view.frame)
         modal.delegate = self
@@ -115,6 +142,7 @@ class TutorialViewController: GameViewController {
         view.addSubview(tutorialButton)
         view.addSubview(modalOverlayView)
         view.addSubview(modalView)
+        view.addSubview(soundButtons)
         view.addSubview(infoLabel)
         
         gridView.center = view.center
@@ -136,8 +164,31 @@ class TutorialViewController: GameViewController {
         particleScene?.removeAllChildren()
     }
     
+    @objc internal func chooseSoundOn() {
+        chooseSound(true)
+    }
+
+    @objc internal func chooseSoundOff() {
+        chooseSound(false)
+    }
+
+    internal func chooseSound(_ on: Bool) {
+        UserData.shared.chooseSound(on)
+        // hide() only fades out, which would leave the buttons visible to VoiceOver.
+        soundButtons.hide { [weak self] _ in self?.soundButtons.removeFromSuperview() }
+        modalView.dismissesOnTap = true
+        AudioManager.shared.playSound(fileName: Assets.Sounds.click)
+        AudioManager.shared.playBackgroundMusic()
+        modalView.hide()
+    }
+
     @objc internal func close() {
+        // Closing before picking keeps the default (sound on); music hasn't started yet.
+        let startMusic = UserData.shared.needsSoundChoice
         UserData.shared.skipTutorial = true
+        if startMusic {
+            AudioManager.shared.playBackgroundMusic()
+        }
         performSegue(withIdentifier: Constants.TutorialViewController.unwindToGameSegue, sender: nil)
     }
     

@@ -140,3 +140,29 @@ struct SaveDataTests {
 }
 
 private final class FixtureBundleToken {}
+
+struct SoundChoiceTests {
+    private let userData: UserData
+
+    init() {
+        let suiteName = "SoundChoiceTests-\(UUID().uuidString)"
+        userData = UserData(defaults: UserDefaults(suiteName: suiteName)!)
+    }
+
+    @Test func newPlayersAreAsked() {
+        #expect(userData.needsSoundChoice)
+    }
+
+    @Test func playersWhoSkippedTheTutorialAreNotAsked() {
+        userData.skipTutorial = true
+        #expect(!userData.needsSoundChoice)
+    }
+
+    @Test(arguments: [true, false])
+    func choosingSetsMusicAndEffects(on: Bool) {
+        userData.chooseSound(on)
+        #expect(userData.backgroundMusic == on)
+        #expect(userData.soundEffects == on)
+        #expect(!userData.needsSoundChoice)
+    }
+}

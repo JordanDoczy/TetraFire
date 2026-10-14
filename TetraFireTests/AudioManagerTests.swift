@@ -52,3 +52,42 @@ struct AudioManagerTests {
         #expect(manager.musicTask == nil)
     }
 }
+
+struct BackgroundAudioTests {
+
+    private func managerPlaying(_ fileName: String) throws -> (AudioManager, AVAudioPlayer) {
+        let url = try #require(Bundle.main.url(forResource: fileName, withExtension: nil))
+        let player = try AVAudioPlayer(contentsOf: url)
+        player.volume = 0
+        player.play()
+        let manager = AudioManager()
+        manager.players[fileName] = player
+        return (manager, player)
+    }
+
+    @Test func pauseStopsMusicAndTheTrackChanger() throws {
+        let fileName = Assets.Sounds.bgm[0]
+        let (manager, player) = try managerPlaying(fileName)
+        player.currentTime = 1
+        manager.backgroundMusicIndex = 0
+        manager.musicTask = Task {}
+        let task = manager.musicTask
+        manager.fadeIn(fileName: fileName)
+        let fade = manager.fadeTasks[fileName]
+
+        manager.pause()
+
+        #expect(!player.isPlaying)
+        #expect(player.currentTime >= 1, "music should pause, not rewind")
+        #expect(task?.isCancelled == true)
+        #expect(manager.musicTask == nil)
+        #expect(fade?.isCancelled == true)
+    }
+
+    @Test func pauseRewindsSoundEffects() throws {
+        let (manager, player) = try managerPlaying(Assets.Sounds.click)
+        manager.pause()
+        #expect(!player.isPlaying)
+        #expect(player.currentTime == 0)
+    }
+}
