@@ -94,6 +94,15 @@ class AudioManager: NSObject{
         }
     }
     
+    // Ambient follows the silent switch and mixes with audio from other apps instead of stopping it.
+    func configureSession() {
+        do {
+            try AVAudioSession.sharedInstance().setCategory(.ambient)
+        } catch {
+            print(error)
+        }
+    }
+
     func playBackgroundMusic() {
         if UserData.shared.backgroundMusic {
             

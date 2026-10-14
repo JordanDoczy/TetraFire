@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import AVFoundation
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -16,6 +15,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var particleScene: ParticleScene?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        AudioManager.shared.configureSession()
         return true
     }
 

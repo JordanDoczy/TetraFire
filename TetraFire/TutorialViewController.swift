@@ -50,7 +50,7 @@ class TutorialViewController: GameViewController {
         button.titleLabel?.font = .menuButton
         button.sizeToFit()
         button.isHidden = true
-        button.frame.origin = CGPoint(x: self.spacer, y: self.spacer)
+        button.frame.origin = CGPoint(x: self.spacer, y: self.safeFrame.minY + self.spacer)
         button.addTarget(self, action: #selector(self.back), for: .touchUpInside)
         return button
         }()
@@ -61,7 +61,7 @@ class TutorialViewController: GameViewController {
         button.setTitleColor(.text, for: .normal)
         button.titleLabel?.font = .menuButton
         button.sizeToFit()
-        button.frame.origin = CGPoint(x: self.view.frame.width - button.frame.width - self.spacer, y: self.spacer)
+        button.frame.origin = CGPoint(x: self.view.frame.width - button.frame.width - self.spacer, y: self.safeFrame.minY + self.spacer)
         button.addTarget(self, action: #selector(self.close), for: UIControl.Event.touchUpInside)
         return button
         }()
@@ -95,7 +95,7 @@ class TutorialViewController: GameViewController {
         button.titleLabel?.font = .menuButton
         button.backgroundColor = .extraLight
         button.layer.cornerRadius = 10
-        button.frame.origin = CGPoint(x: 10, y: self.view.frame.height - button.frame.height - self.spacer)
+        button.frame.origin = CGPoint(x: 10, y: self.safeFrame.maxY - button.frame.height - self.spacer)
         button.addTarget(self, action: #selector(showModal), for: .touchUpInside)
         return button
         }()
