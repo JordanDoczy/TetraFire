@@ -6,7 +6,6 @@
 //  Copyright © 2017 Jordan Doczy. All rights reserved.
 //
 
-import AVFoundation
 import SpriteKit
 import UIKit
 
@@ -33,6 +32,7 @@ class GameViewController: UIViewController, HUDViewDataSource {
     internal var vibrate = UserData.shared.vibrate
     
     // MARK: - Member Vars
+    internal var didAddSubviews = false
     internal var didSwap: Bool = false
     internal var gameState = GameState.gameOver
     internal var longPressState: UIGestureRecognizer.State = .ended
@@ -48,12 +48,12 @@ class GameViewController: UIViewController, HUDViewDataSource {
     }
 
     internal var columnWidth: CGFloat {
-        return floor(view.frame.width / 17)
+        return floor(safeFrame.width / 17)
     }
 
     internal var offset: CGFloat {
         
-        switch (Int(view.frame.height)) {
+        switch (Int(safeFrame.height)) {
         case 0...480: return 10
         case 481...736: return 30
         case 737...: return 60
@@ -63,6 +63,11 @@ class GameViewController: UIViewController, HUDViewDataSource {
     
     internal var particleScene: ParticleScene? {
         return (UIApplication.shared.delegate as? AppDelegate)?.particleScene
+    }
+
+    // The area clear of the Dynamic Island, notch, and home indicator.
+    internal var safeFrame: CGRect {
+        return view.bounds.inset(by: view.safeAreaInsets)
     }
     
     internal var timerUpdateInterval: TimeInterval {
@@ -105,7 +110,7 @@ class GameViewController: UIViewController, HUDViewDataSource {
         let width: CGFloat = self.columnWidth * CGFloat(Constants.columns)
         let height: CGFloat = width * CGFloat(Constants.rows) / CGFloat(Constants.columns)
         let x = self.offset
-        let y = self.view.frame.height - height - self.offset
+        let y = self.safeFrame.maxY - height - self.offset
         let frame = CGRect(x: x, y: y, width: width, height: height)
         
         let gridView = TetraFireGridView(columns: Constants.columns,
@@ -119,7 +124,7 @@ class GameViewController: UIViewController, HUDViewDataSource {
     
     internal lazy var holdView: HoldView = { [unowned self] in
         let width = self.columnWidth * 4
-        let height = self.view.frame.height <= 480 ? self.columnWidth * 4 : self.columnWidth * 5
+        let height = self.safeFrame.height <= 480 ? self.columnWidth * 4 : self.columnWidth * 5
         var y = self.gridView.frame.origin.y - height - self.offset
         let holdView = HoldView(frame: CGRect(x: 0, y: y, width: width , height: height))
         holdView.center.x = self.view.center.x
@@ -130,7 +135,7 @@ class GameViewController: UIViewController, HUDViewDataSource {
         }()
     
     internal lazy var hudView: HUDView = { [unowned self] in
-        let hudView = HUDView(frame: self.view.frame)
+        let hudView = HUDView(frame: self.view.bounds, topInset: self.view.safeAreaInsets.top)
         hudView.dataSource = self
         hudView.delegate = self
         hudView.isUserInteractionEnabled = true
@@ -146,7 +151,7 @@ class GameViewController: UIViewController, HUDViewDataSource {
         }()
     
     internal lazy var menuView: MenuView = { [unowned self] in
-        let menuView = MenuView(frame: self.view.frame,
+        let menuView = MenuView(frame: self.safeFrame,
                                 classicLevelCount: Constants.maxLevelClassicMode,
                                 fireLevelCount: Constants.maxLevelFireMode)
         menuView.delegate = self
@@ -177,7 +182,7 @@ class GameViewController: UIViewController, HUDViewDataSource {
         let panelHeight: CGFloat = self.columnWidth * CGFloat(Constants.rows)
         var xOffset: CGFloat = (self.view.frame.width - self.gridView.frame.origin.x - self.gridView.frame.width - panelWidth) / 2
         let sidePanelView = SidePanelView(frame: CGRect(x: self.view.frame.width - panelWidth - xOffset,
-                                                        y: self.view.frame.height - panelHeight - self.offset,
+                                                        y: self.safeFrame.maxY - panelHeight - self.offset,
                                                         width: panelWidth,
                                                         height: panelHeight))
         sidePanelView.blockSize = CGSize(width: self.columnWidth, height: self.columnWidth)
@@ -200,7 +205,16 @@ class GameViewController: UIViewController, HUDViewDataSource {
         AudioManager.shared.playBackgroundMusic()
         
         addGestures()
-        addSubviews()
+    }
+    
+    // Subviews are laid out once, here rather than in viewDidLoad, because safe-area insets
+    // are not known until the view is in a window. The app is portrait-only, so they don't change.
+    override func viewIsAppearing(_ animated: Bool) {
+        super.viewIsAppearing(animated)
+        if !didAddSubviews {
+            addSubviews()
+            didAddSubviews = true
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -280,7 +294,7 @@ class GameViewController: UIViewController, HUDViewDataSource {
     fileprivate func fourLineAnimation() {
         
         if vibrate {
-            AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
+            UIImpactFeedbackGenerator(style: .heavy, view: gridView).impactOccurred()
         }
         
         let animation = CABasicAnimation(keyPath: "position")
@@ -365,7 +379,7 @@ class GameViewController: UIViewController, HUDViewDataSource {
         didSwap = true
     }
     
-    @objc internal func incrementRow() {
+    internal func incrementRow() {
         guard gameState == .inPlay else{
             return
         }
@@ -417,7 +431,7 @@ class GameViewController: UIViewController, HUDViewDataSource {
         saveState()
     }
     
-    fileprivate static func pointsNeededForLevel(level: Int) -> Int {
+    internal static func pointsNeededForLevel(level: Int) -> Int {
         var points = 0
         var level = level
         while level > 1 {
@@ -447,7 +461,7 @@ class GameViewController: UIViewController, HUDViewDataSource {
         UserData.shared.versionNumber = Bundle.main.versionNumber
     }
     
-    fileprivate static func getPoints(numberOfCompletedRows: Int) -> Int {
+    internal static func getPoints(numberOfCompletedRows: Int) -> Int {
         switch(numberOfCompletedRows) {
         case 0: return 10
         case 1: return 100
@@ -458,7 +472,7 @@ class GameViewController: UIViewController, HUDViewDataSource {
         }
     }
     
-    @objc internal func setPiece() {
+    internal func setPiece() {
         guard let activePiece = activePiece else {
             return
         }
@@ -550,19 +564,19 @@ class GameViewController: UIViewController, HUDViewDataSource {
         switch(timerState) {
         case .drop:
             let delay = SKAction.wait(forDuration: timerDropInterval)
-            let selector = SKAction.perform(#selector(incrementRow), onTarget: self)
-            let sequenceAction = SKAction.sequence([delay, selector])
+            let step = SKAction.run { [weak self] in self?.incrementRow() }
+            let sequenceAction = SKAction.sequence([delay, step])
             let repeatAction = SKAction.repeatForever(sequenceAction)
             particleScene?.run(repeatAction, withKey: constants.timerActionKey)
         case .hold:
             let delay = SKAction.wait(forDuration: timerHoldInterval)
-            let selector = SKAction.perform(#selector(setPiece), onTarget: self)
-            let sequenceAction = SKAction.sequence([delay, selector])
+            let step = SKAction.run { [weak self] in self?.setPiece() }
+            let sequenceAction = SKAction.sequence([delay, step])
             particleScene?.run(sequenceAction, withKey: constants.timerActionKey)
         case .update:
             let delay = SKAction.wait(forDuration: timerUpdateInterval)
-            let selector = SKAction.perform(#selector(incrementRow), onTarget: self)
-            let sequenceAction = SKAction.sequence([delay, selector])
+            let step = SKAction.run { [weak self] in self?.incrementRow() }
+            let sequenceAction = SKAction.sequence([delay, step])
             let repeatAction = SKAction.repeatForever(sequenceAction)
             particleScene?.run(repeatAction, withKey: constants.timerActionKey)
         }

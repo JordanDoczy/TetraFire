@@ -54,7 +54,7 @@ class BackgroundView : UIView {
         super.init(coder: aDecoder)
     }
     
-    deinit {
+    isolated deinit {
         layer.removeAllAnimations()
     }
     

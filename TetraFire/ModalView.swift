@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol ModalViewDelegate: class {
+protocol ModalViewDelegate: AnyObject {
     func modalViewDidHide(modalView: ModalView)
     func modalViewDidShow(modalView: ModalView)
     func modalViewWillHide(modalView: ModalView)

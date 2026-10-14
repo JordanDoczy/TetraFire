@@ -33,137 +33,80 @@ class UserData {
     
     static var shared = UserData()
 
+    // Injectable so tests can save and load without touching the player's real data.
+    let defaults: UserDefaults
+
+    init(defaults: UserDefaults = .standard) {
+        self.defaults = defaults
+    }
+
     var activePiece: PieceModel? {
-        get {
-            guard let data = UserDefaults.standard.object(forKey: constants.ActivePiece) as? Data else {
-                return nil
-            }
-            
-            do {
-                let model = try NSKeyedUnarchiver.unarchivedObject(ofClasses: [PieceModel.self, NSNull.self, NSArray.self], from: data)
-                return model as? PieceModel ?? nil
-            } catch let error {
-                print (error)
-                return nil
-            }
-        }
-        set {
-            guard let newValue = newValue else {
-                UserDefaults.standard.removeObject(forKey: constants.ActivePiece)
-                return
-            }
-            
-            do {
-                let archive = try NSKeyedArchiver.archivedData(withRootObject: newValue, requiringSecureCoding: false)
-                UserDefaults.standard.set(archive, forKey: constants.ActivePiece)
-            } catch {
-                // fail quietly
-            }
-        }
+        get { return loadArchive(forKey: constants.ActivePiece, allowing: [PieceModel.self]) }
+        set { saveArchive(newValue, forKey: constants.ActivePiece) }
     }
     
     // store the inverse so it defaults to true
     var backgroundMusic: Bool {
         get {
-            return !UserDefaults.standard.bool(forKey: constants.BackgroundMusicOff)
+            return !defaults.bool(forKey: constants.BackgroundMusicOff)
         }
         set {
-            UserDefaults.standard.set(!newValue, forKey: constants.BackgroundMusicOff)
+            defaults.set(!newValue, forKey: constants.BackgroundMusicOff)
         }
     }
     
     var gameMode: GameMode {
         get {
-            return GameMode(rawValue:UserDefaults.standard.integer(forKey: constants.GameMode)) ?? .classic
+            return GameMode(rawValue:defaults.integer(forKey: constants.GameMode)) ?? .classic
         }
         set {
-            UserDefaults.standard.set(newValue.rawValue, forKey: constants.GameMode)
+            defaults.set(newValue.rawValue, forKey: constants.GameMode)
         }
     }
     
     var gridModel: GridModel {
         get {
-            guard let data = UserDefaults.standard.object(forKey: constants.GridModel) as? Data else {
-                    clearData()
-                    return GridModelFactory.emptyModel
-            }
-            
-            do {
-                let archive = try NSKeyedUnarchiver.unarchivedObject(ofClasses: [GridModel.self, NSArray.self, NSNull.self], from: data)
-                return archive as? GridModel ?? GridModelFactory.emptyModel
-            } catch let error {
-                print(error)
+            guard defaults.data(forKey: constants.GridModel) != nil else {
+                clearData()
                 return GridModelFactory.emptyModel
             }
+            return loadArchive(forKey: constants.GridModel, allowing: [GridModel.self]) ?? GridModelFactory.emptyModel
         }
-        set {
-            
-            do {
-                let archive = try NSKeyedArchiver.archivedData(withRootObject: newValue, requiringSecureCoding: false)
-                UserDefaults.standard.set(archive, forKey: constants.GridModel)
-            } catch let error {
-                print(error)
-                // fail quietly
-            }
-        }
+        set { saveArchive(newValue, forKey: constants.GridModel) }
     }
  
     var heldPiece: PieceModel? {
-        get {
-            guard let data = UserDefaults.standard.object(forKey: constants.HeldPiece) as? Data else {
-                    return nil
-            }
-            
-            do {
-                let model = try NSKeyedUnarchiver.unarchivedObject(ofClasses: [PieceModel.self, NSNull.self, NSArray.self], from: data)
-                return model as? PieceModel ?? nil
-            } catch let error {
-                print(error)
-                return nil
-            }
-        }
-        set {
-            guard let newValue = newValue else {
-                UserDefaults.standard.removeObject(forKey: constants.HeldPiece)
-                return
-            }
-            
-            do {
-                let archive = try NSKeyedArchiver.archivedData(withRootObject: newValue, requiringSecureCoding: false)
-                UserDefaults.standard.set(archive, forKey: constants.HeldPiece)
-            } catch {
-                // fail quietly
-            }
-        }
+        get { return loadArchive(forKey: constants.HeldPiece, allowing: [PieceModel.self]) }
+        set { saveArchive(newValue, forKey: constants.HeldPiece) }
     }
     
     var highestLevelClassicMode: Int {
         get {
-            let value = UserDefaults.standard.integer(forKey: constants.HighestLevelClassicMode)
+            let value = defaults.integer(forKey: constants.HighestLevelClassicMode)
             return value > 0 ? value : 1
         }
         set {
             if newValue > highestLevelClassicMode {
-                UserDefaults.standard.set(newValue, forKey: constants.HighestLevelClassicMode)
+                defaults.set(newValue, forKey: constants.HighestLevelClassicMode)
             }
         }
     }
     
     var highestLevelFireMode: Int {
         get {
-            let value = UserDefaults.standard.integer(forKey: constants.HighestLevelFireMode)
+            let value = defaults.integer(forKey: constants.HighestLevelFireMode)
             return value > 0 ? value : 1
         }
         set {
             if newValue > highestLevelFireMode {
-                UserDefaults.standard.set(newValue, forKey: constants.HighestLevelFireMode)
+                defaults.set(newValue, forKey: constants.HighestLevelFireMode)
             }
         }
     }
     
     var level: Int {
         get {
-            let level = UserDefaults.standard.integer(forKey: constants.Level)
+            let level = defaults.integer(forKey: constants.Level)
             return level > 0 ? level : 1
         }
         set {
@@ -178,89 +121,96 @@ class UserData {
                 }
             }
             
-            UserDefaults.standard.set(newValue, forKey: constants.Level)
+            defaults.set(newValue, forKey: constants.Level)
         }
     }
     
     var sidePanelModel: SidePanelModel {
-        get {
-            guard let data = UserDefaults.standard.object(forKey: constants.SidePanelModel) as? Data else {
-                    return SidePanelModel()
-            }
-            do {
-                let model = try NSKeyedUnarchiver.unarchivedObject(ofClass: SidePanelModel.self, from: data)
-                return model ?? SidePanelModel()
-            } catch {
-                return SidePanelModel()
-            }
-        }
-        set {
-            
-            do {
-                let archive = try NSKeyedArchiver.archivedData(withRootObject: newValue, requiringSecureCoding: false)
-                UserDefaults.standard.set(archive, forKey: constants.SidePanelModel)
-            } catch {
-                // fail quietly
-            }
-        }
+        // The panel holds an array of pieces, so that class must be allowed too.
+        get { return loadArchive(forKey: constants.SidePanelModel, allowing: [SidePanelModel.self, PieceModel.self]) ?? SidePanelModel() }
+        set { saveArchive(newValue, forKey: constants.SidePanelModel) }
     }
     
     var score: Int {
         get {
-            return UserDefaults.standard.integer(forKey: constants.Score)
+            return defaults.integer(forKey: constants.Score)
         }
         set {
-            UserDefaults.standard.set(newValue, forKey: constants.Score)
+            defaults.set(newValue, forKey: constants.Score)
         }
     }
     
     // store the inverse so it defaults to true
     var soundEffects: Bool {
         get {
-            return !UserDefaults.standard.bool(forKey: constants.SoundEffectsOff)
+            return !defaults.bool(forKey: constants.SoundEffectsOff)
         }
         set {
-            UserDefaults.standard.set(!newValue, forKey: constants.SoundEffectsOff)
+            defaults.set(!newValue, forKey: constants.SoundEffectsOff)
         }
     }
     
     var skipTutorial: Bool {
         get {
-            return UserDefaults.standard.bool(forKey: constants.SkipTutorial)
+            return defaults.bool(forKey: constants.SkipTutorial)
         }
         set {
-            UserDefaults.standard.set(newValue, forKey: constants.SkipTutorial)
+            defaults.set(newValue, forKey: constants.SkipTutorial)
         }
     }
     
     var topScore: Int {
         get {
-            return UserDefaults.standard.integer(forKey: constants.TopScore)
+            return defaults.integer(forKey: constants.TopScore)
         }
         set {
-            UserDefaults.standard.set(newValue, forKey: constants.TopScore)
+            defaults.set(newValue, forKey: constants.TopScore)
         }
     }
 
     var versionNumber: String? {
         get {
-            return UserDefaults.standard.string(forKey: constants.VersionNumber)
+            return defaults.string(forKey: constants.VersionNumber)
         }
         set {
-            UserDefaults.standard.set(newValue, forKey: constants.VersionNumber)
+            defaults.set(newValue, forKey: constants.VersionNumber)
         }
     }
     
     // store the inverse so it defaults to true
     var vibrate: Bool {
         get {
-            return !UserDefaults.standard.bool(forKey: constants.VibrateOff)
+            return !defaults.bool(forKey: constants.VibrateOff)
         }
         set {
-            UserDefaults.standard.set(!newValue, forKey: constants.VibrateOff)
+            defaults.set(!newValue, forKey: constants.VibrateOff)
         }
     }
     
+    // Saves from 1.5 were archived without requiring secure coding, but the classes
+    // support it, so they still decode here.
+    private func loadArchive<T: NSObject>(forKey key: String, allowing classes: [AnyClass]) -> T? {
+        guard let data = defaults.data(forKey: key) else { return nil }
+        do {
+            return try NSKeyedUnarchiver.unarchivedObject(ofClasses: classes + [NSArray.self, NSNull.self], from: data) as? T
+        } catch {
+            print(error)
+            return nil
+        }
+    }
+
+    private func saveArchive(_ object: NSObject?, forKey key: String) {
+        guard let object else {
+            defaults.removeObject(forKey: key)
+            return
+        }
+        do {
+            defaults.set(try NSKeyedArchiver.archivedData(withRootObject: object, requiringSecureCoding: true), forKey: key)
+        } catch {
+            print(error)
+        }
+    }
+
     func clearData() {
         activePiece = nil
         gridModel = GridModelFactory.emptyModel

@@ -8,7 +8,7 @@
 
 import UIKit
 
-struct Constants {
+nonisolated struct Constants {
     static let currentVersion = "1.5"
     static let rows = 20
     static let columns = 10
