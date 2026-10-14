@@ -63,6 +63,7 @@
 		E6E602CB1F62E75900DF65E6 /* click.wav in Resources */ = {isa = PBXBuildFile; fileRef = E6E602C01F62E75900DF65E6 /* click.wav */; };
 		E6E602CC1F62E75900DF65E6 /* ding.wav in Resources */ = {isa = PBXBuildFile; fileRef = E6E602C11F62E75900DF65E6 /* ding.wav */; };
 		E6E602CD1F62E75900DF65E6 /* dowseFire.wav in Resources */ = {isa = PBXBuildFile; fileRef = E6E602C21F62E75900DF65E6 /* dowseFire.wav */; };
+		E6F0A1B22B00000000000002 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = E6F0A1B22B00000000000001 /* PrivacyInfo.xcprivacy */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -135,6 +136,7 @@
 		E6E602C01F62E75900DF65E6 /* click.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = click.wav; sourceTree = "<group>"; };
 		E6E602C11F62E75900DF65E6 /* ding.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ding.wav; sourceTree = "<group>"; };
 		E6E602C21F62E75900DF65E6 /* dowseFire.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = dowseFire.wav; sourceTree = "<group>"; };
+		E6F0A1B22B00000000000001 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -192,6 +194,7 @@
 			isa = PBXGroup;
 			children = (
 				E6C278961F5EDDE60057106E /* Info.plist */,
+				E6F0A1B22B00000000000001 /* PrivacyInfo.xcprivacy */,
 				E6C2788A1F5EDDE60057106E /* AppDelegate.swift */,
 				E6A1B2C32A00000000000001 /* SceneDelegate.swift */,
 				E6C278D11F5F3C600057106E /* Constants.swift */,
@@ -437,6 +440,7 @@
 				E6C278DD1F5F3F400057106E /* RainEffect.sks in Resources */,
 				E6E602C51F62E75900DF65E6 /* bgm2.wav in Resources */,
 				E6C278F01F5F4A5C0057106E /* Assets.xcassets in Resources */,
+				E6F0A1B22B00000000000002 /* PrivacyInfo.xcprivacy in Resources */,
 				E6E602B41F62E71E00DF65E6 /* line.wav in Resources */,
 				E6C278901F5EDDE60057106E /* Main.storyboard in Resources */,
 				E6E602C81F62E75900DF65E6 /* bgm5.mp3 in Resources */,
@@ -716,7 +720,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5;
+				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.jordandoczy.TetraFire;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -737,7 +741,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5;
+				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.jordandoczy.TetraFire;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
