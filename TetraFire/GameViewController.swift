@@ -417,7 +417,7 @@ class GameViewController: UIViewController, HUDViewDataSource {
         saveState()
     }
     
-    fileprivate static func pointsNeededForLevel(level: Int) -> Int {
+    internal static func pointsNeededForLevel(level: Int) -> Int {
         var points = 0
         var level = level
         while level > 1 {
@@ -447,7 +447,7 @@ class GameViewController: UIViewController, HUDViewDataSource {
         UserData.shared.versionNumber = Bundle.main.versionNumber
     }
     
-    fileprivate static func getPoints(numberOfCompletedRows: Int) -> Int {
+    internal static func getPoints(numberOfCompletedRows: Int) -> Int {
         switch(numberOfCompletedRows) {
         case 0: return 10
         case 1: return 100

@@ -75,8 +75,9 @@ class PieceModel: NSObject, NSCoding, NSSecureCoding {
         self.left = left
         self.right = right
         
-        if let orientationRawValue = aDecoder.decodeObject(forKey: encodeKeys.orientation) as? Int {
-            orientation = Orientation(rawValue: orientationRawValue) ?? .left
+        // Encoded with encode(_: Int), which decodeObject can't read back under secure coding.
+        if aDecoder.containsValue(forKey: encodeKeys.orientation) {
+            orientation = Orientation(rawValue: aDecoder.decodeInteger(forKey: encodeKeys.orientation)) ?? .left
         }
 
         if let gridPositionRawValue = aDecoder.decodeObject(forKey: encodeKeys.gridPosition) as? [Int] {
