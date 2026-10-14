@@ -18,7 +18,8 @@ class LevelView: UILabel {
                 frame.origin.y = superview.frame.height / 2 - frame.height / 2
             }
             
-            timer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(onTimerShow), userInfo: nil, repeats: false)
+            timer?.invalidate()
+            timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { [weak self] _ in self?.onTimerShow() }
         }
     }
     
@@ -41,18 +42,15 @@ class LevelView: UILabel {
         super.init(coder: aDecoder)
     }
     
-    @objc internal func onTimerShow() {
+    internal func onTimerShow() {
         show { [weak self] success in
-            guard let strongSelf = self else { return }
-            strongSelf.timer = Timer.scheduledTimer(timeInterval: 0.75,
-                                                    target: strongSelf,
-                                                    selector: #selector(strongSelf.onTimerHide),
-                                                    userInfo: nil,
-                                                    repeats: false)
+            self?.timer = Timer.scheduledTimer(withTimeInterval: 0.75, repeats: false) { [weak self] _ in
+                self?.onTimerHide()
+            }
         }
     }
     
-    @objc internal func onTimerHide() {
+    internal func onTimerHide() {
         timer?.invalidate()
         hide()
     }

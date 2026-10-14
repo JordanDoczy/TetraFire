@@ -158,13 +158,13 @@ class TutorialViewController: GameViewController {
             }
         case 4:
             if heldPiece != nil {
-                Timer.scheduledTimer(timeInterval: 1.5, target: self, selector: #selector(delayComplete), userInfo: nil, repeats: false)
+                Timer.scheduledTimer(withTimeInterval: 1.5, repeats: false) { [weak self] _ in self?.delayComplete() }
             }
         case 5:
             if gameState == .setPiece {
                 gameState = .inPlay
                 gridView.update()
-                Timer.scheduledTimer(timeInterval: 1.2, target: self, selector: #selector(delayComplete), userInfo: nil, repeats: false)
+                Timer.scheduledTimer(withTimeInterval: 1.2, repeats: false) { [weak self] _ in self?.delayComplete() }
             }
         default:
             break
@@ -172,7 +172,7 @@ class TutorialViewController: GameViewController {
         
     }
     
-    @objc internal func delayComplete() {
+    internal func delayComplete() {
         tutorialComplete()
     }
     
@@ -366,8 +366,8 @@ class TutorialViewController: GameViewController {
         switch(timerState) {
         case .drop:
             let delay = SKAction.wait(forDuration: timerDropInterval)
-            let selector = SKAction.perform(#selector(incrementRow), onTarget: self)
-            let sequenceAction = SKAction.sequence([delay, selector])
+            let step = SKAction.run { [weak self] in self?.incrementRow() }
+            let sequenceAction = SKAction.sequence([delay, step])
             let repeatAction = SKAction.repeatForever(sequenceAction)
             particleScene?.run(repeatAction, withKey: constants.timerActionKey)
         case .hold:

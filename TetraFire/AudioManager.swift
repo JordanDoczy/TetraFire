@@ -26,17 +26,15 @@ class AudioManager: NSObject{
         }
     }
 
-    @objc internal func adjustVolume(timer: Timer) {
-        if let volumeAdjustment = timer.userInfo as? VolumeAdjustment {
-            volumeAdjustment.player.volume += volumeAdjustment.adjustment
-            if volumeAdjustment.player.volume >= 1 || volumeAdjustment.player.volume <= 0 {
-                timer.invalidate()
-                volumeAdjustmentComplete(player: volumeAdjustment.player)
-            }
+    internal func adjustVolume(player: AVAudioPlayer, by adjustment: Float, timer: Timer) {
+        player.volume += adjustment
+        if player.volume >= 1 || player.volume <= 0 {
+            timer.invalidate()
+            volumeAdjustmentComplete(player: player)
         }
     }
     
-    @objc internal func changeMusic() {
+    internal func changeMusic() {
         if backgroundMusicIndex >= 0 && backgroundMusicIndex < Assets.Sounds.bgm.count {
             fadeOut(fileName: Assets.Sounds.bgm[backgroundMusicIndex])
         } else {
@@ -47,22 +45,18 @@ class AudioManager: NSObject{
     internal func fadeIn(fileName: String) {
         if let player = players[fileName] {
             timers[fileName]?.invalidate()
-            timers[fileName] = Timer.scheduledTimer(timeInterval: 0.1,
-                                                    target: self,
-                                                    selector: #selector(adjustVolume(timer:)),
-                                                    userInfo: VolumeAdjustment(player: player, adjustment: 0.05),
-                                                    repeats: true)
+            timers[fileName] = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { [weak self] timer in
+                self?.adjustVolume(player: player, by: 0.05, timer: timer)
+            }
         }
     }
     
     internal func fadeOut(fileName: String) {
         if let player = players[fileName]{
             timers[fileName]?.invalidate()
-            timers[fileName] = Timer.scheduledTimer(timeInterval: 0.1,
-                                                    target: self,
-                                                    selector: #selector(adjustVolume(timer:)),
-                                                    userInfo: VolumeAdjustment(player: player, adjustment: -0.05),
-                                                    repeats: true)
+            timers[fileName] = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { [weak self] timer in
+                self?.adjustVolume(player: player, by: -0.05, timer: timer)
+            }
         }
     }
     
@@ -109,11 +103,9 @@ class AudioManager: NSObject{
             let isValid = timers[Constants.BGMTimerKey]?.isValid ?? false
             
             if !isValid {
-                timers[Constants.BGMTimerKey] = Timer.scheduledTimer(timeInterval: interval,
-                                                                     target: self,
-                                                                     selector: #selector(changeMusic),
-                                                                     userInfo: nil,
-                                                                     repeats: true)
+                timers[Constants.BGMTimerKey] = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { [weak self] _ in
+                    self?.changeMusic()
+                }
                 changeMusic()
             }
         } else {
@@ -145,16 +137,6 @@ class AudioManager: NSObject{
             if let timer = timers[Constants.BGMTimerKey], timer.isValid {
                 nextTrack()
             }
-        }
-    }
-    
-    struct VolumeAdjustment {
-        var player: AVAudioPlayer
-        var adjustment: Float
-        
-        init(player: AVAudioPlayer, adjustment: Float) {
-            self.player = player
-            self.adjustment = adjustment
         }
     }
     

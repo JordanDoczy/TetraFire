@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol HoldViewDataSource: class {
+protocol HoldViewDataSource: AnyObject {
     func getPieceModel() -> PieceModel?
 }
 

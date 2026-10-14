@@ -9,11 +9,11 @@
 import UIKit
 import SpriteKit
 
-protocol GridViewDataSource: class {
+protocol GridViewDataSource: AnyObject {
     func value(at: GridPosition) -> BlockType?
 }
 
-protocol GridViewDelegate: class {
+protocol GridViewDelegate: AnyObject {
     func gridViewDidUpdate(gridView: GridView)
 }
 

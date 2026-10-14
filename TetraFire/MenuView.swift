@@ -9,7 +9,7 @@
 import UIKit
 import SpriteKit
 
-protocol MenuViewDelegate: class {
+protocol MenuViewDelegate: AnyObject {
     func newGame(gameMode: GameMode, level: Int)
     func resumeGame()
     func showTutorial()
@@ -19,7 +19,7 @@ protocol MenuViewDelegate: class {
     func menuWillHide(menuView: MenuView)
 }
 
-protocol MenuViewDataSource: class {
+protocol MenuViewDataSource: AnyObject {
     var canResumeGame: Bool { get }
     func maxLevelAchieved(for gameMode: GameMode) -> Int
 }
@@ -399,7 +399,7 @@ class MenuView: UIView {
             }
             
             if let url = URL(string: urlString) {
-                UIApplication.shared.open(url, options: convertToUIApplicationOpenExternalURLOptionsKeyDictionary([:]), completionHandler: nil)
+                UIApplication.shared.open(url)
             }
         }
     }
@@ -659,8 +659,3 @@ class MenuView: UIView {
     }
 }
 
-
-// Helper function inserted by Swift 4.2 migrator.
-fileprivate func convertToUIApplicationOpenExternalURLOptionsKeyDictionary(_ input: [String: Any]) -> [UIApplication.OpenExternalURLOptionsKey: Any] {
-	return Dictionary(uniqueKeysWithValues: input.map { key, value in (UIApplication.OpenExternalURLOptionsKey(rawValue: key), value)})
-}

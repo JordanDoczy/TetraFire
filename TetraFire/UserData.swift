@@ -41,32 +41,8 @@ class UserData {
     }
 
     var activePiece: PieceModel? {
-        get {
-            guard let data = defaults.object(forKey: constants.ActivePiece) as? Data else {
-                return nil
-            }
-            
-            do {
-                let model = try NSKeyedUnarchiver.unarchivedObject(ofClasses: [PieceModel.self, NSNull.self, NSArray.self], from: data)
-                return model as? PieceModel ?? nil
-            } catch let error {
-                print (error)
-                return nil
-            }
-        }
-        set {
-            guard let newValue = newValue else {
-                defaults.removeObject(forKey: constants.ActivePiece)
-                return
-            }
-            
-            do {
-                let archive = try NSKeyedArchiver.archivedData(withRootObject: newValue, requiringSecureCoding: false)
-                defaults.set(archive, forKey: constants.ActivePiece)
-            } catch {
-                // fail quietly
-            }
-        }
+        get { return loadArchive(forKey: constants.ActivePiece, allowing: [PieceModel.self]) }
+        set { saveArchive(newValue, forKey: constants.ActivePiece) }
     }
     
     // store the inverse so it defaults to true
@@ -90,58 +66,18 @@ class UserData {
     
     var gridModel: GridModel {
         get {
-            guard let data = defaults.object(forKey: constants.GridModel) as? Data else {
-                    clearData()
-                    return GridModelFactory.emptyModel
-            }
-            
-            do {
-                let archive = try NSKeyedUnarchiver.unarchivedObject(ofClasses: [GridModel.self, NSArray.self, NSNull.self], from: data)
-                return archive as? GridModel ?? GridModelFactory.emptyModel
-            } catch let error {
-                print(error)
+            guard defaults.data(forKey: constants.GridModel) != nil else {
+                clearData()
                 return GridModelFactory.emptyModel
             }
+            return loadArchive(forKey: constants.GridModel, allowing: [GridModel.self]) ?? GridModelFactory.emptyModel
         }
-        set {
-            
-            do {
-                let archive = try NSKeyedArchiver.archivedData(withRootObject: newValue, requiringSecureCoding: false)
-                defaults.set(archive, forKey: constants.GridModel)
-            } catch let error {
-                print(error)
-                // fail quietly
-            }
-        }
+        set { saveArchive(newValue, forKey: constants.GridModel) }
     }
  
     var heldPiece: PieceModel? {
-        get {
-            guard let data = defaults.object(forKey: constants.HeldPiece) as? Data else {
-                    return nil
-            }
-            
-            do {
-                let model = try NSKeyedUnarchiver.unarchivedObject(ofClasses: [PieceModel.self, NSNull.self, NSArray.self], from: data)
-                return model as? PieceModel ?? nil
-            } catch let error {
-                print(error)
-                return nil
-            }
-        }
-        set {
-            guard let newValue = newValue else {
-                defaults.removeObject(forKey: constants.HeldPiece)
-                return
-            }
-            
-            do {
-                let archive = try NSKeyedArchiver.archivedData(withRootObject: newValue, requiringSecureCoding: false)
-                defaults.set(archive, forKey: constants.HeldPiece)
-            } catch {
-                // fail quietly
-            }
-        }
+        get { return loadArchive(forKey: constants.HeldPiece, allowing: [PieceModel.self]) }
+        set { saveArchive(newValue, forKey: constants.HeldPiece) }
     }
     
     var highestLevelClassicMode: Int {
@@ -190,27 +126,9 @@ class UserData {
     }
     
     var sidePanelModel: SidePanelModel {
-        get {
-            guard let data = defaults.object(forKey: constants.SidePanelModel) as? Data else {
-                    return SidePanelModel()
-            }
-            do {
-                // The panel holds an array of pieces, so those classes must be allowed too.
-                let model = try NSKeyedUnarchiver.unarchivedObject(ofClasses: [SidePanelModel.self, PieceModel.self, NSArray.self, NSNull.self], from: data)
-                return model as? SidePanelModel ?? SidePanelModel()
-            } catch {
-                return SidePanelModel()
-            }
-        }
-        set {
-            
-            do {
-                let archive = try NSKeyedArchiver.archivedData(withRootObject: newValue, requiringSecureCoding: false)
-                defaults.set(archive, forKey: constants.SidePanelModel)
-            } catch {
-                // fail quietly
-            }
-        }
+        // The panel holds an array of pieces, so that class must be allowed too.
+        get { return loadArchive(forKey: constants.SidePanelModel, allowing: [SidePanelModel.self, PieceModel.self]) ?? SidePanelModel() }
+        set { saveArchive(newValue, forKey: constants.SidePanelModel) }
     }
     
     var score: Int {
@@ -269,6 +187,30 @@ class UserData {
         }
     }
     
+    // Saves from 1.5 were archived without requiring secure coding, but the classes
+    // support it, so they still decode here.
+    private func loadArchive<T: NSObject>(forKey key: String, allowing classes: [AnyClass]) -> T? {
+        guard let data = defaults.data(forKey: key) else { return nil }
+        do {
+            return try NSKeyedUnarchiver.unarchivedObject(ofClasses: classes + [NSArray.self, NSNull.self], from: data) as? T
+        } catch {
+            print(error)
+            return nil
+        }
+    }
+
+    private func saveArchive(_ object: NSObject?, forKey key: String) {
+        guard let object else {
+            defaults.removeObject(forKey: key)
+            return
+        }
+        do {
+            defaults.set(try NSKeyedArchiver.archivedData(withRootObject: object, requiringSecureCoding: true), forKey: key)
+        } catch {
+            print(error)
+        }
+    }
+
     func clearData() {
         activePiece = nil
         gridModel = GridModelFactory.emptyModel

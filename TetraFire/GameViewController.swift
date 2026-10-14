@@ -379,7 +379,7 @@ class GameViewController: UIViewController, HUDViewDataSource {
         didSwap = true
     }
     
-    @objc internal func incrementRow() {
+    internal func incrementRow() {
         guard gameState == .inPlay else{
             return
         }
@@ -472,7 +472,7 @@ class GameViewController: UIViewController, HUDViewDataSource {
         }
     }
     
-    @objc internal func setPiece() {
+    internal func setPiece() {
         guard let activePiece = activePiece else {
             return
         }
@@ -564,19 +564,19 @@ class GameViewController: UIViewController, HUDViewDataSource {
         switch(timerState) {
         case .drop:
             let delay = SKAction.wait(forDuration: timerDropInterval)
-            let selector = SKAction.perform(#selector(incrementRow), onTarget: self)
-            let sequenceAction = SKAction.sequence([delay, selector])
+            let step = SKAction.run { [weak self] in self?.incrementRow() }
+            let sequenceAction = SKAction.sequence([delay, step])
             let repeatAction = SKAction.repeatForever(sequenceAction)
             particleScene?.run(repeatAction, withKey: constants.timerActionKey)
         case .hold:
             let delay = SKAction.wait(forDuration: timerHoldInterval)
-            let selector = SKAction.perform(#selector(setPiece), onTarget: self)
-            let sequenceAction = SKAction.sequence([delay, selector])
+            let step = SKAction.run { [weak self] in self?.setPiece() }
+            let sequenceAction = SKAction.sequence([delay, step])
             particleScene?.run(sequenceAction, withKey: constants.timerActionKey)
         case .update:
             let delay = SKAction.wait(forDuration: timerUpdateInterval)
-            let selector = SKAction.perform(#selector(incrementRow), onTarget: self)
-            let sequenceAction = SKAction.sequence([delay, selector])
+            let step = SKAction.run { [weak self] in self?.incrementRow() }
+            let sequenceAction = SKAction.sequence([delay, step])
             let repeatAction = SKAction.repeatForever(sequenceAction)
             particleScene?.run(repeatAction, withKey: constants.timerActionKey)
         }

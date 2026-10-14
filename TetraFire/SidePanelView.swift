@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol SidePanelDataSource: class {
+protocol SidePanelDataSource: AnyObject {
     func getPieceQueue() -> [PieceModel]
 }
 

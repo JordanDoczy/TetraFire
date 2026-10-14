@@ -8,12 +8,12 @@
 
 import UIKit
 
-protocol HUDViewDataSource: class {
+protocol HUDViewDataSource: AnyObject {
     var score: Int { get }
     var level: Int { get }
 }
 
-protocol HUDViewDelegate: class {
+protocol HUDViewDelegate: AnyObject {
     func showMenu()
 }
 
