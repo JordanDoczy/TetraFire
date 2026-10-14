@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 77;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -22,6 +22,7 @@
 		E64D7F291F61D12D00ACBB0E /* TutorialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E64D7F281F61D12D00ACBB0E /* TutorialViewController.swift */; };
 		E64D7F2B1F61E6F300ACBB0E /* SmokeEffect.sks in Resources */ = {isa = PBXBuildFile; fileRef = E64D7F2A1F61E6F300ACBB0E /* SmokeEffect.sks */; };
 		E6C2788B1F5EDDE60057106E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6C2788A1F5EDDE60057106E /* AppDelegate.swift */; };
+		E6A1B2C32A00000000000002 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6A1B2C32A00000000000001 /* SceneDelegate.swift */; };
 		E6C2788D1F5EDDE60057106E /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6C2788C1F5EDDE60057106E /* GameViewController.swift */; };
 		E6C278901F5EDDE60057106E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E6C2788E1F5EDDE60057106E /* Main.storyboard */; };
 		E6C278951F5EDDE60057106E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E6C278931F5EDDE60057106E /* LaunchScreen.storyboard */; };
@@ -65,20 +66,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		E6C2789C1F5EDDE70057106E /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = E6C2787F1F5EDDE60057106E /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = E6C278861F5EDDE60057106E;
-			remoteInfo = TetraFire;
-		};
-		E6C278A71F5EDDE70057106E /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = E6C2787F1F5EDDE60057106E /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = E6C278861F5EDDE60057106E;
-			remoteInfo = TetraFire;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -98,12 +85,11 @@
 		E64D7F2A1F61E6F300ACBB0E /* SmokeEffect.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = SmokeEffect.sks; sourceTree = "<group>"; };
 		E6C278871F5EDDE60057106E /* TetraFire.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TetraFire.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E6C2788A1F5EDDE60057106E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		E6A1B2C32A00000000000001 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		E6C2788C1F5EDDE60057106E /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
 		E6C2788F1F5EDDE60057106E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		E6C278941F5EDDE60057106E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E6C278961F5EDDE60057106E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		E6C2789B1F5EDDE70057106E /* TetraFireTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TetraFireTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		E6C278A61F5EDDE70057106E /* TetraFireUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TetraFireUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E6C278B81F5EDE110057106E /* Enums.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Enums.swift; sourceTree = "<group>"; };
 		E6C278BA1F5EDE590057106E /* GridModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GridModel.swift; sourceTree = "<group>"; };
 		E6C278BC1F5EDEE70057106E /* TypeAliases.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TypeAliases.swift; sourceTree = "<group>"; };
@@ -151,20 +137,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		E6C278981F5EDDE70057106E /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E6C278A31F5EDDE70057106E /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -191,8 +163,6 @@
 			isa = PBXGroup;
 			children = (
 				E6C278871F5EDDE60057106E /* TetraFire.app */,
-				E6C2789B1F5EDDE70057106E /* TetraFireTests.xctest */,
-				E6C278A61F5EDDE70057106E /* TetraFireUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -202,6 +172,7 @@
 			children = (
 				E6C278961F5EDDE60057106E /* Info.plist */,
 				E6C2788A1F5EDDE60057106E /* AppDelegate.swift */,
+				E6A1B2C32A00000000000001 /* SceneDelegate.swift */,
 				E6C278D11F5F3C600057106E /* Constants.swift */,
 				E6C278B81F5EDE110057106E /* Enums.swift */,
 				E6C278EB1F5F47B30057106E /* UserData.swift */,
@@ -349,50 +320,14 @@
 			productReference = E6C278871F5EDDE60057106E /* TetraFire.app */;
 			productType = "com.apple.product-type.application";
 		};
-		E6C2789A1F5EDDE70057106E /* TetraFireTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = E6C278B21F5EDDE70057106E /* Build configuration list for PBXNativeTarget "TetraFireTests" */;
-			buildPhases = (
-				E6C278971F5EDDE70057106E /* Sources */,
-				E6C278981F5EDDE70057106E /* Frameworks */,
-				E6C278991F5EDDE70057106E /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				E6C2789D1F5EDDE70057106E /* PBXTargetDependency */,
-			);
-			name = TetraFireTests;
-			productName = TetraFireTests;
-			productReference = E6C2789B1F5EDDE70057106E /* TetraFireTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		E6C278A51F5EDDE70057106E /* TetraFireUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = E6C278B51F5EDDE70057106E /* Build configuration list for PBXNativeTarget "TetraFireUITests" */;
-			buildPhases = (
-				E6C278A21F5EDDE70057106E /* Sources */,
-				E6C278A31F5EDDE70057106E /* Frameworks */,
-				E6C278A41F5EDDE70057106E /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				E6C278A81F5EDDE70057106E /* PBXTargetDependency */,
-			);
-			name = TetraFireUITests;
-			productName = TetraFireUITests;
-			productReference = E6C278A61F5EDDE70057106E /* TetraFireUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		E6C2787F1F5EDDE60057106E /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0830;
-				LastUpgradeCheck = 1240;
+				LastSwiftUpdateCheck = 2710;
+				LastUpgradeCheck = 2710;
 				ORGANIZATIONNAME = "Jordan Doczy";
 				TargetAttributes = {
 					E6C278861F5EDDE60057106E = {
@@ -401,22 +336,10 @@
 						LastSwiftMigration = 1240;
 						ProvisioningStyle = Automatic;
 					};
-					E6C2789A1F5EDDE70057106E = {
-						CreatedOnToolsVersion = 8.3.3;
-						DevelopmentTeam = YW7WUV924U;
-						ProvisioningStyle = Automatic;
-						TestTargetID = E6C278861F5EDDE60057106E;
-					};
-					E6C278A51F5EDDE70057106E = {
-						CreatedOnToolsVersion = 8.3.3;
-						DevelopmentTeam = YW7WUV924U;
-						ProvisioningStyle = Automatic;
-						TestTargetID = E6C278861F5EDDE60057106E;
-					};
 				};
 			};
 			buildConfigurationList = E6C278821F5EDDE60057106E /* Build configuration list for PBXProject "TetraFire" */;
-			compatibilityVersion = "Xcode 3.2";
+			compatibilityVersion = "Xcode 16.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -429,8 +352,6 @@
 			projectRoot = "";
 			targets = (
 				E6C278861F5EDDE60057106E /* TetraFire */,
-				E6C2789A1F5EDDE70057106E /* TetraFireTests */,
-				E6C278A51F5EDDE70057106E /* TetraFireUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -467,20 +388,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		E6C278991F5EDDE70057106E /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E6C278A41F5EDDE70057106E /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -510,6 +417,7 @@
 				E619FDF71F61760800481A51 /* LevelView.swift in Sources */,
 				E619FDDD1F60300200481A51 /* PieceModel.swift in Sources */,
 				E6C2788B1F5EDDE60057106E /* AppDelegate.swift in Sources */,
+				E6A1B2C32A00000000000002 /* SceneDelegate.swift in Sources */,
 				E619FDD91F602A3700481A51 /* SidePanelView.swift in Sources */,
 				E6C278EE1F5F47CF0057106E /* SidePanelModel.swift in Sources */,
 				E619FDF91F61761300481A51 /* ModalView.swift in Sources */,
@@ -522,33 +430,9 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		E6C278971F5EDDE70057106E /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E6C278A21F5EDDE70057106E /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		E6C2789D1F5EDDE70057106E /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = E6C278861F5EDDE60057106E /* TetraFire */;
-			targetProxy = E6C2789C1F5EDDE70057106E /* PBXContainerItemProxy */;
-		};
-		E6C278A81F5EDDE70057106E /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = E6C278861F5EDDE60057106E /* TetraFire */;
-			targetProxy = E6C278A71F5EDDE70057106E /* PBXContainerItemProxy */;
-		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
@@ -622,7 +506,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -677,7 +561,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
@@ -697,7 +581,6 @@
 				MARKETING_VERSION = 1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.jordandoczy.TetraFire;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -714,67 +597,8 @@
 				MARKETING_VERSION = 1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.jordandoczy.TetraFire;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
-			};
-			name = Release;
-		};
-		E6C278B31F5EDDE70057106E /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				DEVELOPMENT_TEAM = YW7WUV924U;
-				INFOPLIST_FILE = TetraFireTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.jordandoczy.TetraFireTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TetraFire.app/TetraFire";
-			};
-			name = Debug;
-		};
-		E6C278B41F5EDDE70057106E /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				DEVELOPMENT_TEAM = YW7WUV924U;
-				INFOPLIST_FILE = TetraFireTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.jordandoczy.TetraFireTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TetraFire.app/TetraFire";
-			};
-			name = Release;
-		};
-		E6C278B61F5EDDE70057106E /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				DEVELOPMENT_TEAM = YW7WUV924U;
-				INFOPLIST_FILE = TetraFireUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.jordandoczy.TetraFireUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
-				TEST_TARGET_NAME = TetraFire;
-			};
-			name = Debug;
-		};
-		E6C278B71F5EDDE70057106E /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				DEVELOPMENT_TEAM = YW7WUV924U;
-				INFOPLIST_FILE = TetraFireUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.jordandoczy.TetraFireUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
-				TEST_TARGET_NAME = TetraFire;
 			};
 			name = Release;
 		};
@@ -795,24 +619,6 @@
 			buildConfigurations = (
 				E6C278B01F5EDDE70057106E /* Debug */,
 				E6C278B11F5EDDE70057106E /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		E6C278B21F5EDDE70057106E /* Build configuration list for PBXNativeTarget "TetraFireTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				E6C278B31F5EDDE70057106E /* Debug */,
-				E6C278B41F5EDDE70057106E /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		E6C278B51F5EDDE70057106E /* Build configuration list for PBXNativeTarget "TetraFireUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				E6C278B61F5EDDE70057106E /* Debug */,
-				E6C278B71F5EDDE70057106E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

@@ -31,7 +31,7 @@
         <!--Tutorial View Controller-->
         <scene sceneID="JdA-NP-PCM">
             <objects>
-                <viewController id="2KQ-2O-LqJ" customClass="TutorialViewController" customModule="TetraFire" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="2KQ-2O-LqJ" modalPresentationStyle="fullScreen" customClass="TutorialViewController" customModule="TetraFire" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="o5H-YC-oQ2"/>
                         <viewControllerLayoutGuide type="bottom" id="nvj-f8-xXV"/>
