@@ -18,12 +18,16 @@ class LevelView: UILabel {
                 frame.origin.y = superview.frame.height / 2 - frame.height / 2
             }
             
-            timer?.invalidate()
-            timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { [weak self] _ in self?.onTimerShow() }
+            showTask?.cancel()
+            showTask = Task { [weak self] in
+                try? await Task.sleep(for: .milliseconds(500))
+                guard !Task.isCancelled else { return }
+                self?.onTimerShow()
+            }
         }
     }
     
-    fileprivate var timer: Timer?
+    fileprivate var showTask: Task<Void, Never>?
 
     override required init(frame: CGRect) {
         super.init(frame: frame)
@@ -44,14 +48,16 @@ class LevelView: UILabel {
     
     internal func onTimerShow() {
         show { [weak self] success in
-            self?.timer = Timer.scheduledTimer(withTimeInterval: 0.75, repeats: false) { [weak self] _ in
+            self?.showTask = Task { [weak self] in
+                try? await Task.sleep(for: .milliseconds(750))
+                guard !Task.isCancelled else { return }
                 self?.onTimerHide()
             }
         }
     }
     
     internal func onTimerHide() {
-        timer?.invalidate()
+        showTask?.cancel()
         hide()
     }
 }

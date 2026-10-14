@@ -8,7 +8,7 @@ import Testing
 
 struct PieceModelTests {
 
-    static let allPieces: [() -> PieceModel] = [
+    nonisolated static let allPieces: [@MainActor @Sendable () -> PieceModel] = [
         { JPiece() }, { LPiece() }, { LinePiece() }, { SPiece() },
         { SquarePiece() }, { TPiece() }, { ZPiece() },
     ]

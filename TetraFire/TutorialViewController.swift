@@ -158,13 +158,13 @@ class TutorialViewController: GameViewController {
             }
         case 4:
             if heldPiece != nil {
-                Timer.scheduledTimer(withTimeInterval: 1.5, repeats: false) { [weak self] _ in self?.delayComplete() }
+                delayComplete(after: .milliseconds(1500))
             }
         case 5:
             if gameState == .setPiece {
                 gameState = .inPlay
                 gridView.update()
-                Timer.scheduledTimer(withTimeInterval: 1.2, repeats: false) { [weak self] _ in self?.delayComplete() }
+                delayComplete(after: .milliseconds(1200))
             }
         default:
             break
@@ -172,8 +172,11 @@ class TutorialViewController: GameViewController {
         
     }
     
-    internal func delayComplete() {
-        tutorialComplete()
+    internal func delayComplete(after delay: Duration) {
+        Task { [weak self] in
+            try? await Task.sleep(for: delay)
+            self?.tutorialComplete()
+        }
     }
     
     override func onPan(sender: UIPanGestureRecognizer) {

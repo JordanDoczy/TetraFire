@@ -10,14 +10,11 @@ import AVFoundation
 
 class AudioManager: NSObject{
     
-    struct Constants {
-        static let BGMTimerKey = "BGMTimerKey"
-    }
-    
     static var shared = AudioManager()
     var players = [String : AVAudioPlayer]()
-    var timers = [String : Timer]()
-    var interval: Double = 120
+    var fadeTasks = [String : Task<Void, Never>]()
+    var musicTask: Task<Void, Never>?
+    var interval: Duration = .seconds(120)
     var backgroundMusicIndex: Int = -1 {
         didSet {
             if backgroundMusicIndex == Assets.Sounds.bgm.count {
@@ -26,14 +23,6 @@ class AudioManager: NSObject{
         }
     }
 
-    internal func adjustVolume(player: AVAudioPlayer, by adjustment: Float, timer: Timer) {
-        player.volume += adjustment
-        if player.volume >= 1 || player.volume <= 0 {
-            timer.invalidate()
-            volumeAdjustmentComplete(player: player)
-        }
-    }
-    
     internal func changeMusic() {
         if backgroundMusicIndex >= 0 && backgroundMusicIndex < Assets.Sounds.bgm.count {
             fadeOut(fileName: Assets.Sounds.bgm[backgroundMusicIndex])
@@ -43,19 +32,24 @@ class AudioManager: NSObject{
     }
     
     internal func fadeIn(fileName: String) {
-        if let player = players[fileName] {
-            timers[fileName]?.invalidate()
-            timers[fileName] = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { [weak self] timer in
-                self?.adjustVolume(player: player, by: 0.05, timer: timer)
-            }
-        }
+        fade(fileName: fileName, by: 0.05)
     }
     
     internal func fadeOut(fileName: String) {
-        if let player = players[fileName]{
-            timers[fileName]?.invalidate()
-            timers[fileName] = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { [weak self] timer in
-                self?.adjustVolume(player: player, by: -0.05, timer: timer)
+        fade(fileName: fileName, by: -0.05)
+    }
+
+    // Steps the volume every 0.1s until it reaches 0 or 1. Starting a new fade cancels the old one.
+    internal func fade(fileName: String, by adjustment: Float) {
+        guard let player = players[fileName] else { return }
+        fadeTasks[fileName]?.cancel()
+        fadeTasks[fileName] = Task { [weak self] in
+            while (try? await Task.sleep(for: .milliseconds(100))) != nil {
+                player.volume += adjustment
+                if player.volume >= 1 || player.volume <= 0 {
+                    self?.volumeAdjustmentComplete(player: player)
+                    return
+                }
             }
         }
     }
@@ -100,11 +94,11 @@ class AudioManager: NSObject{
     func playBackgroundMusic() {
         if UserData.shared.backgroundMusic {
             
-            let isValid = timers[Constants.BGMTimerKey]?.isValid ?? false
-            
-            if !isValid {
-                timers[Constants.BGMTimerKey] = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { [weak self] _ in
-                    self?.changeMusic()
+            if musicTask == nil {
+                musicTask = Task { [weak self, interval] in
+                    while (try? await Task.sleep(for: interval)) != nil {
+                        self?.changeMusic()
+                    }
                 }
                 changeMusic()
             }
@@ -124,7 +118,8 @@ class AudioManager: NSObject{
     }
     
     func stopBackgroundMusic() {
-        timers[Constants.BGMTimerKey]?.invalidate()
+        musicTask?.cancel()
+        musicTask = nil
         
         if 0 ..< Assets.Sounds.bgm.count ~= backgroundMusicIndex {
             stopAudio(fileName: Assets.Sounds.bgm[backgroundMusicIndex])
@@ -134,7 +129,7 @@ class AudioManager: NSObject{
     internal func volumeAdjustmentComplete(player: AVAudioPlayer) {
         if player.volume <= 0 {
             player.stop()
-            if let timer = timers[Constants.BGMTimerKey], timer.isValid {
+            if musicTask != nil {
                 nextTrack()
             }
         }
