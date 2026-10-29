@@ -9,7 +9,7 @@
 import UIKit
 
 nonisolated struct Constants {
-    static let currentVersion = "1.5"
+    static let currentVersion = "2.0"
     static let rows = 20
     static let columns = 10
     static let maxLevelFireMode = 15

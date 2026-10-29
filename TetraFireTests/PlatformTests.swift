@@ -24,6 +24,7 @@ struct PlatformTests {
 
     @Test func gameViewsStayInsideTheSafeArea() async throws {
         let controller = try await gameViewController()
+        controller.menuView.transform = .identity
         let safeFrame = controller.safeFrame
         #expect(safeFrame.contains(controller.gridView.frame))
         #expect(safeFrame.contains(controller.sidePanelView.frame))
