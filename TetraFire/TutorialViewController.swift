@@ -34,6 +34,10 @@ class TutorialViewController: GameViewController {
                 tutorial = 0
             }
             tutorial == 0 ? backButton.hide() : backButton.show()
+            if tutorial == 0 && UserData.shared.needsSoundChoice {
+                modalView.dismissesOnTap = false
+                soundButtons.show()
+            }
             if tutorial < modalModel.count {
                 modalView.message = modalModel[tutorial]
                 modalView.show()
@@ -50,7 +54,7 @@ class TutorialViewController: GameViewController {
         button.titleLabel?.font = .menuButton
         button.sizeToFit()
         button.isHidden = true
-        button.frame.origin = CGPoint(x: self.spacer, y: self.spacer)
+        button.frame.origin = CGPoint(x: self.spacer, y: self.safeFrame.minY + self.spacer)
         button.addTarget(self, action: #selector(self.back), for: .touchUpInside)
         return button
         }()
@@ -61,11 +65,34 @@ class TutorialViewController: GameViewController {
         button.setTitleColor(.text, for: .normal)
         button.titleLabel?.font = .menuButton
         button.sizeToFit()
-        button.frame.origin = CGPoint(x: self.view.frame.width - button.frame.width - self.spacer, y: self.spacer)
+        button.frame.origin = CGPoint(x: self.view.frame.width - button.frame.width - self.spacer, y: self.safeFrame.minY + self.spacer)
         button.addTarget(self, action: #selector(self.close), for: UIControl.Event.touchUpInside)
         return button
         }()
     
+    // Sound on / off choice, shown on the welcome screen the first time the app runs.
+    fileprivate lazy var soundButtons: UIStackView = { [unowned self] in
+        let on = UIButton()
+        on.setTitle(Strings.soundOn, for: .normal)
+        on.addTarget(self, action: #selector(self.chooseSoundOn), for: .touchUpInside)
+
+        let off = UIButton()
+        off.setTitle(Strings.soundOff, for: .normal)
+        off.addTarget(self, action: #selector(self.chooseSoundOff), for: .touchUpInside)
+
+        let stack = UIStackView(arrangedSubviews: [on, off])
+        for button in [on, off] {
+            button.setTitleColor(.text, for: .normal)
+            button.titleLabel?.font = .menuButton
+        }
+        stack.axis = .horizontal
+        stack.spacing = self.spacer * 4
+        stack.frame.size = stack.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
+        stack.center = CGPoint(x: self.view.bounds.midX, y: self.safeFrame.minY + self.safeFrame.height * 0.62)
+        stack.isHidden = true
+        return stack
+    }()
+
     fileprivate lazy var modalView: ModalView = { [unowned self] in
         let modal = ModalView(frame: self.view.frame)
         modal.delegate = self
@@ -95,7 +122,7 @@ class TutorialViewController: GameViewController {
         button.titleLabel?.font = .menuButton
         button.backgroundColor = .extraLight
         button.layer.cornerRadius = 10
-        button.frame.origin = CGPoint(x: 10, y: self.view.frame.height - button.frame.height - self.spacer)
+        button.frame.origin = CGPoint(x: 10, y: self.safeFrame.maxY - button.frame.height - self.spacer)
         button.addTarget(self, action: #selector(showModal), for: .touchUpInside)
         return button
         }()
@@ -115,6 +142,7 @@ class TutorialViewController: GameViewController {
         view.addSubview(tutorialButton)
         view.addSubview(modalOverlayView)
         view.addSubview(modalView)
+        view.addSubview(soundButtons)
         view.addSubview(infoLabel)
         
         gridView.center = view.center
@@ -136,8 +164,31 @@ class TutorialViewController: GameViewController {
         particleScene?.removeAllChildren()
     }
     
+    @objc internal func chooseSoundOn() {
+        chooseSound(true)
+    }
+
+    @objc internal func chooseSoundOff() {
+        chooseSound(false)
+    }
+
+    internal func chooseSound(_ on: Bool) {
+        UserData.shared.chooseSound(on)
+        // hide() only fades out, which would leave the buttons visible to VoiceOver.
+        soundButtons.hide { [weak self] _ in self?.soundButtons.removeFromSuperview() }
+        modalView.dismissesOnTap = true
+        AudioManager.shared.playSound(fileName: Assets.Sounds.click)
+        AudioManager.shared.playBackgroundMusic()
+        modalView.hide()
+    }
+
     @objc internal func close() {
+        // Closing before picking keeps the default (sound on); music hasn't started yet.
+        let startMusic = UserData.shared.needsSoundChoice
         UserData.shared.skipTutorial = true
+        if startMusic {
+            AudioManager.shared.playBackgroundMusic()
+        }
         performSegue(withIdentifier: Constants.TutorialViewController.unwindToGameSegue, sender: nil)
     }
     
@@ -158,13 +209,13 @@ class TutorialViewController: GameViewController {
             }
         case 4:
             if heldPiece != nil {
-                Timer.scheduledTimer(timeInterval: 1.5, target: self, selector: #selector(delayComplete), userInfo: nil, repeats: false)
+                delayComplete(after: .milliseconds(1500))
             }
         case 5:
             if gameState == .setPiece {
                 gameState = .inPlay
                 gridView.update()
-                Timer.scheduledTimer(timeInterval: 1.2, target: self, selector: #selector(delayComplete), userInfo: nil, repeats: false)
+                delayComplete(after: .milliseconds(1200))
             }
         default:
             break
@@ -172,8 +223,11 @@ class TutorialViewController: GameViewController {
         
     }
     
-    @objc internal func delayComplete() {
-        tutorialComplete()
+    internal func delayComplete(after delay: Duration) {
+        Task { [weak self] in
+            try? await Task.sleep(for: delay)
+            self?.tutorialComplete()
+        }
     }
     
     override func onPan(sender: UIPanGestureRecognizer) {
@@ -366,8 +420,8 @@ class TutorialViewController: GameViewController {
         switch(timerState) {
         case .drop:
             let delay = SKAction.wait(forDuration: timerDropInterval)
-            let selector = SKAction.perform(#selector(incrementRow), onTarget: self)
-            let sequenceAction = SKAction.sequence([delay, selector])
+            let step = SKAction.run { [weak self] in self?.incrementRow() }
+            let sequenceAction = SKAction.sequence([delay, step])
             let repeatAction = SKAction.repeatForever(sequenceAction)
             particleScene?.run(repeatAction, withKey: constants.timerActionKey)
         case .hold:

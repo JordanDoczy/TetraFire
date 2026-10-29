@@ -8,12 +8,12 @@
 
 import UIKit
 
-protocol HUDViewDataSource: class {
+protocol HUDViewDataSource: AnyObject {
     var score: Int { get }
     var level: Int { get }
 }
 
-protocol HUDViewDelegate: class {
+protocol HUDViewDelegate: AnyObject {
     func showMenu()
 }
 
@@ -25,6 +25,8 @@ class HUDView: UIView {
     fileprivate var level: NumericLabel?
     fileprivate var score: NumericLabel?
     fileprivate var menuLabel: UILabel?
+    // The bar is drawn from the top edge, under the Dynamic Island; its contents start below it.
+    fileprivate var topInset: CGFloat = 0
     
     internal var spacer: CGFloat {
         
@@ -34,12 +36,13 @@ class HUDView: UIView {
         }
     }
     
-    override required init(frame: CGRect) {
+    required init(frame: CGRect, topInset: CGFloat) {
         super.init(frame: frame)
+        self.topInset = topInset
         
         isOpaque = false
 
-        let score = NumericLabel(frame: CGRect(x: spacer, y: spacer*1.5, width: 0, height: 0))
+        let score = NumericLabel(frame: CGRect(x: spacer, y: topInset + spacer*1.5, width: 0, height: 0))
         score.label = Strings.score
         self.score = score
 
@@ -57,7 +60,7 @@ class HUDView: UIView {
         
         let clearButton = UIButton()
         clearButton.frame.size = CGSize(width: 100, height: 75)
-        clearButton.frame.origin = CGPoint(x:frame.width - 100, y:0)
+        clearButton.frame.origin = CGPoint(x:frame.width - 100, y:topInset)
         clearButton.addTarget(self, action: #selector(pauseGame), for: .touchUpInside)
         
         addSubview(menuLabel)
@@ -75,8 +78,8 @@ class HUDView: UIView {
     override func draw(_ rect: CGRect) {
         let path = UIBezierPath()
         
-        let yMin: CGFloat = 25 + spacer
-        let yMax: CGFloat = 50 + spacer*1.5
+        let yMin: CGFloat = topInset + 25 + spacer
+        let yMax: CGFloat = topInset + 50 + spacer*1.5
         
         let point0 = CGPoint.zero
         let point1 = CGPoint(x: 0, y: yMax)

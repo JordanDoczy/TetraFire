@@ -8,9 +8,8 @@
 
 import UIKit
 import SpriteKit
-import AVFoundation
 
-protocol MenuViewDelegate: class {
+protocol MenuViewDelegate: AnyObject {
     func newGame(gameMode: GameMode, level: Int)
     func resumeGame()
     func showTutorial()
@@ -20,7 +19,7 @@ protocol MenuViewDelegate: class {
     func menuWillHide(menuView: MenuView)
 }
 
-protocol MenuViewDataSource: class {
+protocol MenuViewDataSource: AnyObject {
     var canResumeGame: Bool { get }
     func maxLevelAchieved(for gameMode: GameMode) -> Int
 }
@@ -69,6 +68,8 @@ class MenuView: UIView {
         guard var point = fireGameButton?.frame.origin else { return }
         point.x = frame.width - 50
         point.y += 25
+        // The menu sits inside the safe area; the particle view covers the whole screen.
+        point = convert(point, to: superview)
         let emitterNode = particleScene.runEffect(forKey: effectKey,
                                                   effect: .fire,
                                                   position: particleScene.convertPoint(fromView: point),
@@ -124,7 +125,7 @@ class MenuView: UIView {
     
     fileprivate func createCreditsMenu() {
         creditsMenu?.removeFromSuperview()
-        creditsMenu = UIView(frame: frame)
+        creditsMenu = UIView(frame: bounds)
         addSubview(creditsMenu!)
         
         backButton = createButton(title: Strings.back, selector: #selector(backToMainMenu))
@@ -156,7 +157,7 @@ class MenuView: UIView {
 
     fileprivate func createGameModeMenu() {
         gameModeMenu?.removeFromSuperview()
-        gameModeMenu = UIView(frame: frame)
+        gameModeMenu = UIView(frame: bounds)
         gameModeMenu!.isHidden = true
         addSubview(gameModeMenu!)
         
@@ -188,7 +189,7 @@ class MenuView: UIView {
         self.gameMode = gameMode
 
         levelSelectMenu?.removeFromSuperview()
-        levelSelectMenu = UIView(frame: frame)
+        levelSelectMenu = UIView(frame: bounds)
         addSubview(levelSelectMenu!)
         
         
@@ -253,7 +254,7 @@ class MenuView: UIView {
     
     fileprivate func createMainMenu() {
         mainMenu?.removeFromSuperview()
-        mainMenu = UIView(frame: frame)
+        mainMenu = UIView(frame: bounds)
         addSubview(mainMenu!)
         
         var subviews = [UIView]()
@@ -290,7 +291,7 @@ class MenuView: UIView {
     
     fileprivate func createSettingsMenu() {
         settingsMenu?.removeFromSuperview()
-        settingsMenu = UIView(frame: frame)
+        settingsMenu = UIView(frame: bounds)
         addSubview(settingsMenu!)
         
         backButton = createButton(title: Strings.back, selector: #selector(backToMainMenu(sender:)))
@@ -398,7 +399,7 @@ class MenuView: UIView {
             }
             
             if let url = URL(string: urlString) {
-                UIApplication.shared.open(url, options: convertToUIApplicationOpenExternalURLOptionsKeyDictionary([:]), completionHandler: nil)
+                UIApplication.shared.open(url)
             }
         }
     }
@@ -601,7 +602,7 @@ class MenuView: UIView {
                 UserData.shared.vibrate = active
                 updateLabel()
                 if active && oldValue == false {
-                AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
+                    UIImpactFeedbackGenerator(style: .heavy, view: self).impactOccurred()
                 }
             }
         }
@@ -658,8 +659,3 @@ class MenuView: UIView {
     }
 }
 
-
-// Helper function inserted by Swift 4.2 migrator.
-fileprivate func convertToUIApplicationOpenExternalURLOptionsKeyDictionary(_ input: [String: Any]) -> [UIApplication.OpenExternalURLOptionsKey: Any] {
-	return Dictionary(uniqueKeysWithValues: input.map { key, value in (UIApplication.OpenExternalURLOptionsKey(rawValue: key), value)})
-}

@@ -37,6 +37,8 @@ struct Strings{
     static let selectMode       = "SELECT MODE"
     static let settings         = "SETTINGS"
     static let soundEffects     = "SOUND EFFECTS"
+    static let soundOff         = "SOUND OFF"
+    static let soundOn          = "SOUND ON"
     static let swipeRight       = "(swipe right)"
     static let swipeUp          = "(swipe up)"
     static let tap3Times        = "(tap 3 times)"

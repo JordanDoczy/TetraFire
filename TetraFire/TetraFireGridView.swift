@@ -74,14 +74,6 @@ class TetraFireGridView: GridView, UIGridDataSource {
         bringSubviewToFront(grid)
     }
     
-    internal func putOutFire(timer: Timer) {
-        if let fireIndicies = timer.userInfo as? [Int] {
-            for index in 0 ..< fireIndicies.count {
-                blocks[fireIndicies[index]].dowseFire()
-            }
-        }
-    }
-
     fileprivate func refreshGrid() {
         for row in 0 ..< rows {
             for column in 0 ..< columns {

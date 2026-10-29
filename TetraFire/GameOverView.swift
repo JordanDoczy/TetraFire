@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol GameOverViewDelegate: class {
+protocol GameOverViewDelegate: AnyObject {
     func playAgain()
     func quit()
 }

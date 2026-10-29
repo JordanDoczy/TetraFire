@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol UIGridDataSource: class {
+protocol UIGridDataSource: AnyObject {
     var rows: Int { get }
     var columns: Int { get }
     var boxWidth: CGFloat { get }

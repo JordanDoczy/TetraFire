@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol ModalViewDelegate: class {
+protocol ModalViewDelegate: AnyObject {
     func modalViewDidHide(modalView: ModalView)
     func modalViewDidShow(modalView: ModalView)
     func modalViewWillHide(modalView: ModalView)
@@ -18,6 +18,9 @@ protocol ModalViewDelegate: class {
 class ModalView: UIView{
     
     weak var delegate: ModalViewDelegate?
+
+    // Off while the modal is waiting for the player to press one of its buttons.
+    var dismissesOnTap = true
 
     var message: String = "" {
         didSet {
@@ -51,7 +54,9 @@ class ModalView: UIView{
     }
     
     @objc func close() {
-        hide()
+        if dismissesOnTap {
+            hide()
+        }
     }
     
     override func hide(with delay: Delay = 0.0, completion: ((Bool)->Void)? = nil) {
